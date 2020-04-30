@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>PureCloud Web Chat Demo Modern UI v1.0</title>
+    <title>PureCloud Web Chat Demo Basic UI v1.0</title>
 </head>
 
 <body>
@@ -30,16 +30,15 @@
     </form>
     <div id="chat-container" style="height:600px"></div>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script
+		id="purecloud-webchat-js"
+		type="text/javascript"
+		src="https://apps.mypurecloud.de/webchat/jsapi-v1.js"
+		region="eu-central-1"
+		org-guid="a72567d3-0036-4a05-9fa5-3873348c24b4"
+		deployment-key="cb57f3b0-57fc-4419-aa96-51772d9378ad"
+	></script>
 
-<script
-  id="purecloud-webchat-js"
-  type="text/javascript"
-  src="https://apps.mypurecloud.de/webchat/jsapi-v1.js"
-  region="eu-central-1"
-  org-guid="a72567d3-0036-4a05-9fa5-3873348c24b4"
-  deployment-key="18b010b5-6313-47ff-b2cd-fafa4a27ca79"
-></script>
-	
     <script type="text/javascript">
 
         $(document).ready(function initializeChat () {
@@ -92,8 +91,7 @@
 
                 //Allowed reconnect origins
                 //reconnectOrigins: ['https://example.com', 'https://help.example.com', 'https://shop.example.com'],
-                //reconnectOrigins: ['http://koti.aina.net/~purecloudtesti/jani_v1_0.htm'],
-                reconnectOrigins: ['https://jhe277.github.io/webchat/webchat_test1.htm'],
+                reconnectOrigins: ['http://koti.aina.net/~purecloudtesti/jani_v1_0.htm'],
 
                 // Logo used within the chat window
                 companyLogoSmall: {
@@ -161,7 +159,7 @@
                             //Use the updateConfig function to update batches of properties by passing in a partially filled chatConfig object
                             webchat.updateConfig({
                                 agentEmail: 'jani.heikkinen@aina.fi',
-                                locale: 'fi',
+                                locale: 'en-us',
                                 welcomeMessage: 'Welcome to Example support',
                             });
 
