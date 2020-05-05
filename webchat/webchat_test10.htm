@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>PureCloud Web Chat Demo Basic UI v1.0</title>
+</head>
+
+<body>
+    <form id="chatForm">
+        <h3>Participant Information- local</h3>
+
+        <table class="webchat-config">
+            <tbody>
+                <tr>
+                    <th>First Name:</th>
+                    <td><input type="text" id="first-name" value="John" /></td>
+                </tr>
+                <tr>
+                    <th>Last Name:</th>
+                    <td><input type="text" id="last-name" value="Doe" /></td>
+                </tr>
+                <tr>
+                    <th>Agent Email:</th>
+                    <td><input type="text" id="agent-email" value="alex.agent@example.com" /></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" id="chat-button">Start Chat</button>
+    </form>
+    <div id="chat-container" style="height:600px"></div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script
+		id="purecloud-webchat-js"
+		type="text/javascript"
+		src="https://apps.mypurecloud.de/webchat/jsapi-v1.js"
+		region="eu-central-1"
+		org-guid="a72567d3-0036-4a05-9fa5-3873348c24b4"
+		deployment-key="cb57f3b0-57fc-4419-aa96-51772d9378ad"
+	></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function initializeChat () {
+            var chatConfig = {
+                // Web chat application URL
+                webchatAppUrl: 'https://apps.mypurecloud.de/webchat',
+
+                // Web chat service URL
+                webchatServiceUrl: 'https://realtime.mypurecloud.de:443',
+
+                // organization GUID
+                orgGuid: 'a72567d3-0036-4a05-9fa5-3873348c24b4',
+
+                // Numeric organization ID
+                orgId: 314,
+
+                // Organization name. Replace with your org name.
+                orgName: 'ainacomoy',
+
+                // Requested agent language skill (Agent must have this language skill to receive chat)
+                //language: 'English - Written',
+                language: [],
+
+                // Requested agent skills (Agent must have these skills to receive chat)
+                //skills: ['Computers', 'Printers'],
+                // OR
+                skills: [],
+
+                // Priority
+                priority: 0,
+
+                // Queue Name
+                queueName : 'Janin Testijono',
+
+                // Target agent email (OPTIONAL)
+                //agentEmail: 'alex.agent@example.com',
+                agentEmail: '',
+
+                // Whether to show submit button or send message on Enter keypress
+                showSubmitButton: true,
+
+                // Log level
+                logLevel: 'DEBUG',
+
+                // Locale code
+                locale: 'en',
+
+                // Whether to allow reconnects
+                reconnectEnabled: true,
+
+                //Allowed reconnect origins
+                //reconnectOrigins: ['https://example.com', 'https://help.example.com', 'https://shop.example.com'],
+                //reconnectOrigins: ['http://koti.aina.net/~purecloudtesti/jani_v1_0.htm'],
+				reconnectOrigins: ['https://jhe277.github.io/webchat/webchat_test1.htm'],
+
+                // Logo used within the chat window
+                companyLogoSmall: {
+                    width: 149,
+                    height: 149,
+                    url: 'https://d3a63qt71m2kua.cloudfront.net/developer-tools/1362/assets/images/companylogo.png'
+                },
+                // Fallback image used for agent if no agent image is defined in the agent's PureCloud profile
+                agentAvatar: {
+                    width: 462,
+                    height: 462,
+                    url: 'https://d3a63qt71m2kua.cloudfront.net/developer-tools/1362/assets/images/companylogo.png'
+                },
+
+                userAvatar: {
+                    width: 300,
+                    height: 300,
+                    url: 'https://dhqbrvplips7x.cloudfront.net/webchat/1.0.23/agent-e202505f.png'
+                },
+
+                // Text displayed with chat window is displayed
+                welcomeMessage: 'Thanks for chatting.',
+
+                // CSS class applied to the chat window
+                cssClass: 'webchat-frame',
+
+                // Custom style applied to the chat window
+                css: {
+                    width: '100%',
+                    height: '100%'
+                }
+				
+            };
+            var chatButton = document.getElementById('chat-button');
+
+            // Required if reconnects are enabled
+            window.PURECLOUD_WEBCHAT_FRAME_CONFIG = {
+                containerEl: 'chat-container'
+            };
+
+            ININ.webchat.create(chatConfig)
+                .then(function (webchat) {
+                    // Optionally use isAutoJoined if reconnects are enabled
+                    if (webchat.isAutoJoined()) {
+                        // Do something to disable chat button
+                    } else {
+                        chatButton.onclick = function () {
+                            var firstName = document.getElementById('first-name').value;
+                            var lastName = document.getElementById('last-name').value;
+                            var agentEmail = document.getElementById('agent-email').value;
+
+                            // Use getConfig.setConfigProperty() for any web chat configuration property to dynamically set config values.
+                            webchat.getConfig().setData({
+                                firstName: firstName,
+                                lastName: lastName,
+                                addressStreet: '',
+                                addressCity: '',
+                                addressPostalCode: '',
+                                addressState: '',
+                                phoneNumber: '',
+                                email: '',
+                                phoneType: ''
+                            });
+
+                            //Use the updateConfig function to update batches of properties by passing in a partially filled chatConfig object
+                            webchat.updateConfig({
+                                agentEmail: 'jani.heikkinen@aina.fi',
+                                locale: 'en-us',
+                                welcomeMessage: 'Welcome to Example support',
+                            });
+
+                            // Alternatively, call webchat.renderPopup here. Note that reconnects do not apply to popup chat.
+                            return webchat.renderFrame({
+                                containerEl: 'chat-container'
+                            });
+                            //return webchat.renderPopup({
+                            //    containerEl: 'chat-container'
+                            //});
+                        };
+                    }
+                })
+                .catch(function (err){
+                    console.log(err);
+                });
+        });
+
+    </script>
+
+</body>
+</html>
