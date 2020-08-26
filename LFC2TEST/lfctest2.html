@@ -80,6 +80,8 @@
                 //Log the purecloud environment (region)
                 console.log("PureCloud environment: " + myClientApp.pcEnvironment);
 
+                myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
+                
                 myClientApp.lifecycle.addBootstrapListener(() => {
                     logLifecycleEvent('App Lifecycle Event: bootstrap', true);
 
