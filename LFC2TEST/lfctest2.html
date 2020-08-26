@@ -71,10 +71,10 @@
                 let envQueryParamName = 'pcEnvironment';
                 if (window && window.location && typeof window.location.search === 'string' &&
                     window.location.search.indexOf(envQueryParamName) >= 0) {
-                    myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
+                    let myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
                 } else {
                     // Use default PureCloud region
-                    myClientApp = new window.purecloud.apps.ClientApp('mypurecloud.de');
+                    let myClientApp = new window.purecloud.apps.ClientApp("mypurecloud.de");
                 }
 
                 //Log the purecloud environment (region)
