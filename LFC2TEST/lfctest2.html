@@ -74,7 +74,7 @@
                     myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
                 } else {
                     // Use default PureCloud region
-                    myClientApp = new window.purecloud.apps.ClientApp();
+                    myClientApp = new window.purecloud.apps.ClientApp('mypurecloud.de');
                 }
 
                 //Log the purecloud environment (region)
