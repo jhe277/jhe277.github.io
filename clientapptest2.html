@@ -190,12 +190,6 @@
 
                 function logLifecycleEvent(logText, incommingEvent) {
                     console.log(logText);
-                    
-                    $tgt = jQuery('.lifecycle-events .log')
-                    var newItem = $('<li>' + logText + '</li>');
-                    newItem.addClass(incommingEvent ? 'incomming' : 'outgoing');
-
-                    $tgt.prepend(newItem);
                 }
             });
         </script>
