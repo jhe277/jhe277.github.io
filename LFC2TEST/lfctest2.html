@@ -67,8 +67,15 @@
                 // Log version and About using static properties
                 console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
                 console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
-
-                let myClientApp = new window.purecloud.apps.ClientApp();
+                
+                let envQueryParamName = 'pcEnvironment';
+                if (window && window.location && typeof window.location.search === 'string' &&
+                    window.location.search.indexOf(envQueryParamName) >= 0) {
+                    myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
+                } else {
+                    // Use default PureCloud region
+                    myClientApp = new window.purecloud.apps.ClientApp();
+                }
 
                 //Log the purecloud environment (region)
                 console.log("PureCloud environment: " + myClientApp.pcEnvironment);
