@@ -307,9 +307,11 @@
         var platformClient = require('platformClient');
         var client = platformClient.ApiClient.instance;
         var clientId = 'ae5c2aca-651e-4c6a-8a5c-2192b5a0f856';
-        var redirectUri = 'https://crespino4.github.io/AdAstra.html'; //clientApp address - same as the clientApp configuration url without parameters
+        var redirectUri = 'https://jhe277.github.io/LFC2TEST/lfctest2.html'; //clientApp address - same as the clientApp configuration url without parameters
         var state = 'AdAstra';
 
+        client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
+        
         //API instances
         var usersApi = new platformClient.UsersApi();
         var notificationsApi = new platformClient.NotificationsApi();
