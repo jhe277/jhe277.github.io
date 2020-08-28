@@ -1,18 +1,51 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
         <title>PureCloud App Lifecycle Demo</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-49c1570bfd8967d8861435e0e7178035.min.js"></script>
 
         <style>
             body {
-                margin: 0;
+                margin-left: 20px;
+            }
+
+            .log {
+                overflow: auto;
+
+                height: 15em;
+
+                line-height: 1.5em;
+            }
+
+            section {
+                margin-top: 2em;
+                padding-left: 3em;
+            }
+
+            section h1 {
+                font-size: 2em;
+            }
+
+            ul.lifecycle-event-log li.incomming::before {
+                content: '↙ ';
+                color: #FF0000;
+            }
+            ul.lifecycle-event-log li.outgoing::before {
+                content: '↗ ';
+                color: #00FF00;
+            }
+
+            footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+
+                text-align: center;
             }
         </style>
-
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.3.0/purecloud-client-app-sdk.js"></script>
- 
     </head>
 
     <body>
@@ -59,16 +92,78 @@
             </ul>
         </section>
 
+        <footer>
+            Icon made by
+            <a href="http://www.flaticon.com/authors/cursor-creative"
+                title="Cursor Creative">
+                Cursor Creative
+            </a>
+            from
+            <a href="http://www.flaticon.com"
+                title="Flaticon">
+                www.flaticon.com
+            </a>
+            is licensed by
+            <a href="http://creativecommons.org/licenses/by/3.0/"
+                title="Creative Commons BY 3.0"
+                target="_blank">
+                CC 3.0 BY
+            </a>
+        </footer>
+
         <script>
             var lifecycleStatusMessageTitle = 'Lifecycle Demo App';
             var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
-            var blurCount = 0;
 
-            $( document ).ready(function () {
-                // Log version and About using static properties
-                console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
-                console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
-                
+            function extractParams(paramStr) {
+                let result = {};
+
+                if (paramStr) {
+                    let params = paramStr.split('&');
+                    params.forEach(function(currParam) {
+                        if (currParam) {
+                            let paramTokens = currParam.split('=');
+                            let paramName = paramTokens[0];
+                            let paramValue = paramTokens[1];
+                            if (paramName) {
+                                paramName = decodeURIComponent(paramName);
+                                paramValue = paramValue ? decodeURIComponent(paramValue) : null;
+
+                                if (!result.hasOwnProperty(paramName)) {
+                                    result[paramName] = paramValue;
+                                } else if (Array.isArray(result[paramName])) {
+                                    result[paramName].push(paramValue);
+                                } else {
+                                    result[paramName] = [result[paramName], paramValue];
+                                }
+                            }
+                        }
+                    });
+                }
+
+                return result;
+            }
+
+            function getRequireManualToastDismissal() {
+                if (window.location.search) {
+                    let paramValue = extractParams(window.location.search.substring(1)).requireManualToastDismissal;
+                    if (paramValue === 'true') {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            jQuery(function () {
+                let myClientApp = null;
+
+                var requireManualToastDismissal = getRequireManualToastDismissal();
+
+                var count = 0;
+                // Note: This manual check for query string is for backwards compatibility of this
+                // deployed example.  In your own apps, you can assume the query param will be
+                // provided by PureCloud if you have configured it in your app's config.
                 let envQueryParamName = 'pcEnvironment';
                 if (window && window.location && typeof window.location.search === 'string' &&
                     window.location.search.indexOf(envQueryParamName) >= 0) {
@@ -78,11 +173,6 @@
                     myClientApp = new window.purecloud.apps.ClientApp();
                 }
 
-                //Log the purecloud environment (region)
-                console.log("PureCloud environment: " + myClientApp.pcEnvironment);
-
-                myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
-                
                 myClientApp.lifecycle.addBootstrapListener(() => {
                     logLifecycleEvent('App Lifecycle Event: bootstrap', true);
 
@@ -199,9 +289,74 @@
                 });
 
                 function logLifecycleEvent(logText, incommingEvent) {
-                    console.log(logText);
+                    $tgt = jQuery('.lifecycle-events .log')
+                    var newItem = $('<li>' + logText + '</li>');
+                    newItem.addClass(incommingEvent ? 'incomming' : 'outgoing');
+
+                    $tgt.prepend(newItem);
                 }
             });
         </script>
+
+<script src="//sdk-cdn.mypurecloud.com/javascript/58.0.0/pureckoud-platform-client-v2.main.js"></script>
+<script>
+    
+    $( document ).ready(function() {
+        //Purecloud Oauth information
+        var platformClient = require('platformClient');
+        var client = platformClient.ApiClient.instance;
+        var clientId = '<Oauth_Client_ID_Goes_Here>';
+        var redirectUri = 'https://crespino4.github.io/AdAstra.html'; //clientApp address - same as the clientApp configuration url without parameters
+        var state = 'AdAstra';
+
+        //API instances
+        var usersApi = new platformClient.UsersApi();
+        var notificationsApi = new platformClient.NotificationsApi();
+
+        //Perform Implicit Login Grant Authentication
+        client.loginImplicitGrant(clientId, redirectUri, { state: state })
+            .then((data) => {
+                //User Authenticated
+                console.log("Authenticated: " + data);
+                //Make request to GET /api/v2/users/me?expand=presence
+                return usersApi.getUsersMe({ 'expand': ["presence"] });
+            })
+            .then((userMe) => {
+                //Me Response
+                document.querySelector("#Welcome").innerHTML = "Welcome " + userMe.name;
+                console.log("Hello, ${userMe.name}!");
+                return notificationsApi.postNotificationsChannels();
+            }).then((channel) => {
+                //Channel Created
+                //Set WebSocket in Channel
+                var socket = new WebSocket(channel.connectUri);
+                socket.onMessage = onSocketMessage;
+                //Subscribe to conversation events in the queue
+                let topic = [{"id": "v2.routing.queues.<queueid>.conversations"}];
+                return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+            }).catch((err) => {
+                //Handle failure response
+                console.log(err);
+            });
+        
+            //Handler for every Websocket message
+            function onSocketMessage(event){
+                console.log("Websocket Event Received: " + event.data);
+                let data = JSON.parse(event.data);
+                let topic = data.topicName;
+                let eventBody = data.eventBody;
+
+                console.log("Notification: Topic = " + topic);
+                console.log("Notification: Body = " + eventBody);
+
+                //Add a bomb to the Game
+                if ( topic == "v2.routing.queues.<id>.conversations" ) {
+                    //Do stuff
+                    addBomb();
+                }
+            };
+        });
+        </script>
+        
     </body>
 </html>
