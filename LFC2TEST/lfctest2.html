@@ -332,7 +332,7 @@
                 var socket = new WebSocket(channel.connectUri);
                 socket.onMessage = onSocketMessage;
                 //Subscribe to conversation events in the queue
-                let topic = [{"id": "v2.routing.queues.<queueid>.conversations"}];
+                let topic = [{"id": "v2.routing.queues.52672129-f97b-40c1-b011-f50e6a577259.conversations"}];
                 return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
             }).catch((err) => {
                 //Handle failure response
@@ -350,9 +350,10 @@
                 console.log("Notification: Body = " + eventBody);
 
                 //Add a bomb to the Game
-                if ( topic == "v2.routing.queues.<id>.conversations" ) {
+                if ( topic == "v2.routing.queues.52672129-f97b-40c1-b011-f50e6a577259.conversations" ) {
                     //Do stuff
-                    addBomb();
+                    //addBomb();
+                    myClientApp.alerting.showToastPopup('App LFC2', 'Conversation Event Perusjonotesti1');
                 }
             };
         });
