@@ -171,8 +171,8 @@
                     window.location.search.indexOf(envQueryParamName) >= 0) {
                     myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
                 } else {
-                    // Use default PureCloud region
-                    myClientApp = new window.purecloud.apps.ClientApp();
+                    // Use frankfurt as default PureCloud region
+                    myClientApp = new window.purecloud.apps.ClientApp({pcEnvironment: 'mypurecloud.de'});
                 }
 
                 myClientApp.lifecycle.addBootstrapListener(() => {
