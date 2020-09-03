@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QNotif2 LFC3 test</title>
+
+        <style>
+            body {
+                margin: 0;
+            }
+        </style>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
+		<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
+
+		<script>
+			$( document ).ready(function() {
+			
+				$("#qbutton1").click(function() {
+					$("#queueslist").append('<option value="2">Queue 2</option>');
+				});
+
+				$("#qbutton2").click(function() {
+					$("#queueslist").append($('<option>', {
+						value: 3,
+						text: 'Queue 3'
+					}));
+				});
+
+				$("#qbutton3").click(function() {
+					var newOptions = {
+						'4' : 'Red',
+						'5' : 'Blue',
+						'6' : 'Green',
+						'7' : 'Yellow'
+					};
+					
+					$.each(newOptions, function(val, text) {
+						$("#queueslist").append($('<option>', {
+							value: val,
+							text: text
+						}));
+					});
+				});
+
+				$("#ddsel").click(function() {
+					document.querySelector("#myvalue").innerHTML = "Selected: " + $("#queueslist").val();
+				});
+				
+				$("#queueslist").change(function() {
+					document.querySelector("#myvalue").innerHTML = "Selected: " + $("#queueslist").val();
+				});
+
+				//https://developer.mypurecloud.de/api/rest/client-libraries/javascript/RoutingApi.html#getRoutingQueues
+				
+                //Purecloud Oauth information
+                var platformClient = require('platformClient');
+                var client = platformClient.ApiClient.instance;
+                var clientId = 'f481400e-e257-4529-8b1d-c52ac27575e0';
+                var redirectUri = 'https://jhe277.github.io/LFC2TEST/lfctest3.html'; //clientApp address - same as the clientApp configuration url without parameters
+        
+                client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
+                
+                //API instances
+                var usersApi = new platformClient.UsersApi();
+                var notificationsApi = new platformClient.NotificationsApi();
+                var routingApi = new platformClient.RoutingApi();
+        
+                //Perform Implicit Login Grant Authentication
+                client.loginImplicitGrant(clientId, redirectUri)
+                    .then((data) => {
+                        //User Authenticated
+                        console.log("LFC3: Authenticated: " + data);
+                        //Make request to GET /api/v2/users/me?expand=presence
+                        return usersApi.getUsersMe({ 'expand': ["presence"] });
+                    })
+                    .then((userMe) => {
+                        //Me Response
+                        document.querySelector("#Welcome").innerHTML = "Welcome " + userMe.name;
+                        console.log("LFC3: Hello, "+userMe.name+"!");
+
+						let opts = { 
+						  'pageSize': 25, // Number | Page size
+						  'pageNumber': 1, // Number | Page number
+						  'sortBy': "name" //, String | Sort by
+						  //'name': "name_example", // String | Name
+						  //'id': ["id_example"], // [String] | ID(s)
+						  //'divisionId': ["divisionId_example"] // [String] | Division ID(s)
+						};
+
+                        return routingApi.getRoutingQueues(opts);
+                    }).then((myqueues) => {
+						console.log(`getRoutingQueues success! data: ${JSON.stringify(myqueues, null, 2)}`);
+						//console.log("LFC3: "+myqueues);
+						//return notificationsApi.postNotificationsChannels();
+					//}).then((channel) => {
+                        //Channel Created
+                        //Set WebSocket in Channel
+                        //var socket = new WebSocket(channel.connectUri);
+                        //socket.onmessage = onSocketMessage;
+                        //Subscribe to conversation events in the queue
+                        //let topic = [{"id": "v2.routing.queues.52672129-f97b-40c1-b011-f50e6a577259.conversations.calls"}];
+                        //return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+                    }).catch((err) => {
+                        //Handle failure response
+                        console.log("LFC3: "+err);
+                    });
+					
+					/**
+                    //Handler for every Websocket message
+                    function onSocketMessage(event){
+                        console.log("LFC3: Websocket Event Received: " + event.data);
+                        let data = JSON.parse(event.data);
+                        let topic = data.topicName;
+                        let eventBody = data.eventBody;
+        
+                        console.log("LFC3: Notification: Topic = " + topic);
+                        console.log("LFC3: Notification: Body = " + eventBody);
+                    };
+					**/
+
+			});
+
+		</script>
+
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+		<h1 id="Welcome" width="100%" align="center">Welcome</h1>
+		<br />
+		<button type="button" id="qbutton1">Add Queue 2</button>
+		<button type="button" id="qbutton2">Add Queue 3</button>
+		<button type="button" id="qbutton3">Add Multiple</button>
+		<button type="button" id="ddsel">Get selected value</button>
+		<br />
+		<h2 id="myvalue">Selected: </h2>
+		<br />
+		<select id="queueslist">
+			<option value="1">Example Queue</option>
+		</select>
+
+	</body>
+</html>
