@@ -1,51 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>PureCloud App Lifecycle Demo</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-49c1570bfd8967d8861435e0e7178035.min.js"></script>
+        <title>PureCloud App LFC2 Test</title>
 
         <style>
             body {
-                margin-left: 20px;
-            }
-
-            .log {
-                overflow: auto;
-
-                height: 15em;
-
-                line-height: 1.5em;
-            }
-
-            section {
-                margin-top: 2em;
-                padding-left: 3em;
-            }
-
-            section h1 {
-                font-size: 2em;
-            }
-
-            ul.lifecycle-event-log li.incomming::before {
-                content: '↙ ';
-                color: #FF0000;
-            }
-            ul.lifecycle-event-log li.outgoing::before {
-                content: '↗ ';
-                color: #00FF00;
-            }
-
-            footer {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-
-                text-align: center;
+                margin: 0;
             }
         </style>
+
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
+ 
     </head>
 
     <body>
@@ -53,9 +19,7 @@
             For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
         </noscript>
 
-        <h2 id="Welcome" width="100%" align="center">Welcome </h2>
-        
-        <h1>PureCloud App Lifecycle Demo</h1>
+        <h1>PureCloud App LFC2 Test</h1>
         <p>
             PureCloud Apps have a full lifecycle that developers can utilize to
             provide a seamless experience for end users.
@@ -63,6 +27,9 @@
         <hr>
 
         <section>
+            <h1 id="Welcome" width="100%" align="center">Welcome </h1>
+            <br>
+            <br>
             <h1>App Lifecycle</h1>
             <ol>
                 <li>Loading - The app's iframe is loading</li>
@@ -94,275 +61,80 @@
             </ul>
         </section>
 
-        <footer>
-            Icon made by
-            <a href="http://www.flaticon.com/authors/cursor-creative"
-                title="Cursor Creative">
-                Cursor Creative
-            </a>
-            from
-            <a href="http://www.flaticon.com"
-                title="Flaticon">
-                www.flaticon.com
-            </a>
-            is licensed by
-            <a href="http://creativecommons.org/licenses/by/3.0/"
-                title="Creative Commons BY 3.0"
-                target="_blank">
-                CC 3.0 BY
-            </a>
-        </footer>
-
+        <script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
+        
         <script>
-            var lifecycleStatusMessageTitle = 'Lifecycle Demo App';
-            var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
-
-            function extractParams(paramStr) {
-                let result = {};
-
-                if (paramStr) {
-                    let params = paramStr.split('&');
-                    params.forEach(function(currParam) {
-                        if (currParam) {
-                            let paramTokens = currParam.split('=');
-                            let paramName = paramTokens[0];
-                            let paramValue = paramTokens[1];
-                            if (paramName) {
-                                paramName = decodeURIComponent(paramName);
-                                paramValue = paramValue ? decodeURIComponent(paramValue) : null;
-
-                                if (!result.hasOwnProperty(paramName)) {
-                                    result[paramName] = paramValue;
-                                } else if (Array.isArray(result[paramName])) {
-                                    result[paramName].push(paramValue);
-                                } else {
-                                    result[paramName] = [result[paramName], paramValue];
-                                }
-                            }
-                        }
+            
+            $( document ).ready(function() {
+                //Purecloud Oauth information
+                var platformClient = require('platformClient');
+                var client = platformClient.ApiClient.instance;
+                var clientId = 'f481400e-e257-4529-8b1d-c52ac27575e0';
+                var redirectUri = 'https://jhe277.github.io/LFC2TEST/lfctest2.html'; //clientApp address - same as the clientApp configuration url without parameters
+        
+                client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
+                
+                //API instances
+                var usersApi = new platformClient.UsersApi();
+                var notificationsApi = new platformClient.NotificationsApi();
+        
+                //Perform Implicit Login Grant Authentication
+                client.loginImplicitGrant(clientId, redirectUri)
+                    .then((data) => {
+                        //User Authenticated
+                        console.log("LFC2: Authenticated: " + data);
+                        //Make request to GET /api/v2/users/me?expand=presence
+                        return usersApi.getUsersMe({ 'expand': ["presence"] });
+                    })
+                    .then((userMe) => {
+                        //Me Response
+                        document.querySelector("#Welcome").innerHTML = "Welcome " + userMe.name;
+                        console.log("LFC2: Hello, "+userMe.name+"!");
+                        return notificationsApi.postNotificationsChannels();
+                    }).then((channel) => {
+                        //Channel Created
+                        //Set WebSocket in Channel
+                        var socket = new WebSocket(channel.connectUri);
+                        socket.onmessage = onSocketMessage;
+                        //Subscribe to conversation events in the queue
+                        let topic = [{"id": "v2.routing.queues.52672129-f97b-40c1-b011-f50e6a577259.conversations.calls"}];
+                        return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+                    }).catch((err) => {
+                        //Handle failure response
+                        console.log("LFC2: "+err);
                     });
-                }
+                
+                    //Handler for every Websocket message
+                    function onSocketMessage(event){
+                        console.log("LFC2: Websocket Event Received: " + event.data);
+                        let data = JSON.parse(event.data);
+                        let topic = data.topicName;
+                        let eventBody = data.eventBody;
+        
+                        console.log("LFC2: Notification: Topic = " + topic);
+                        console.log("LFC2: Notification: Body = " + eventBody);
+        
+                        //Add a bomb to the Game
+                        if ( topic == "v2.routing.queues.52672129-f97b-40c1-b011-f50e6a577259.conversations" ) {
+                            //Do stuff
+                            //addBomb();
+                            //document.querySelector(".lifecycle-event-log").innerHTML = "Welcome " + userMe.name;
 
-                return result;
-            }
+                            var mylogText = "LFC2: New conversation notification"
 
-            function getRequireManualToastDismissal() {
-                if (window.location.search) {
-                    let paramValue = extractParams(window.location.search.substring(1)).requireManualToastDismissal;
-                    if (paramValue === 'true') {
-                        return true;
-                    }
-                }
+                            $tgt = jQuery('.lifecycle-events .log')
+                            var newItem = $('<li>' + mylogText + '</li>');
+                            var incommingEvent = true;
+                            newItem.addClass(incommingEvent ? 'incomming' : 'outgoing');
 
-                return false;
-            }
+                            $tgt.prepend(newItem);
 
-            jQuery(function () {
-                let myClientApp = null;
-
-                var requireManualToastDismissal = getRequireManualToastDismissal();
-
-                var count = 0;
-                // Note: This manual check for query string is for backwards compatibility of this
-                // deployed example.  In your own apps, you can assume the query param will be
-                // provided by PureCloud if you have configured it in your app's config.
-                let envQueryParamName = 'pcEnvironment';
-                if (window && window.location && typeof window.location.search === 'string' &&
-                    window.location.search.indexOf(envQueryParamName) >= 0) {
-                    myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
-                } else {
-                    // Use frankfurt as default PureCloud region
-                    myClientApp = new window.purecloud.apps.ClientApp({pcEnvironment: 'mypurecloud.de'});
-                }
-
-                myClientApp.lifecycle.addBootstrapListener(() => {
-                    logLifecycleEvent('App Lifecycle Event: bootstrap', true);
-
-                    // Simulating bootstrap delay of 500ms
-                    window.setTimeout(() => {
-                        myClientApp.lifecycle.bootstrapped();
-                        if (requireManualToastDismissal) {
-                            myClientApp.alerting.showToastPopup(
-                                lifecycleStatusMessageTitle,
-                                `Bootstrap Complete (500ms delay):${lifecycleStatusMessageId}-bootstrap-${count}`, {
-                                    id: `${lifecycleStatusMessageId}-bootstrap-${count}`,
-                                    type: 'success',
-                                    showCloseButton: true,
-                                    timeout: 0
-                                }
-                            );
-                            count++;
-                        } else {
-                            myClientApp.alerting.showToastPopup(
-                                lifecycleStatusMessageTitle,
-                                `Bootstrap Complete (500ms delay)`, {
-                                    id: lifecycleStatusMessageId,
-                                    type: 'success',
-                                }
-                            );
+                            //myClientApp.alerting.showToastPopup('App LFC2', 'Conversation Event Perusjonotesti1');
+                            console.log("LFC2: Conversation Event Perusjonotesti1");
                         }
-
-                        logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
-                    }, 500);
+                    };
                 });
-
-                function onAppFocus () {
-                    logLifecycleEvent('App Lifecycle Event: focus', true);
-                    if (requireManualToastDismissal) {
-                        myClientApp.alerting.showToastPopup(
-                            lifecycleStatusMessageTitle,
-                            `App Focused:${lifecycleStatusMessageId}-focus-${count}`, {
-                                id: `${lifecycleStatusMessageId}-focus-${count}`,
-                                showCloseButton: true,
-                                timeout: 0
-                            }
-                        );
-                        count++;
-                    } else {
-                        myClientApp.alerting.showToastPopup(
-                        lifecycleStatusMessageTitle,
-                            'App Focused', {
-                                id: lifecycleStatusMessageId
-                            }
-                        );
-                    }
-
-                }
-                myClientApp.lifecycle.addFocusListener(onAppFocus);
-
-                function onAppBlur () {
-                    logLifecycleEvent('App Lifecycle Event: blur', true);
-                    if (requireManualToastDismissal) {
-                        myClientApp.alerting.showToastPopup(
-                            lifecycleStatusMessageTitle,
-                            `App Blurred:${lifecycleStatusMessageId}-blur-${count}`, {
-                                id: `${lifecycleStatusMessageId}-blur-${count}`,
-                                showCloseButton: true,
-                                timeout: 0
-                            }
-                        );
-                        count++;
-                    } else {
-                        myClientApp.alerting.showToastPopup(
-                            lifecycleStatusMessageTitle,
-                            'App Blurred', {
-                                id: lifecycleStatusMessageId
-                            }
-                        );
-                    }
-
-                }
-                myClientApp.lifecycle.addBlurListener(onAppBlur);
-
-                myClientApp.lifecycle.addStopListener(() => {
-                    logLifecycleEvent('App Lifecycle Event: stop', true);
-
-                    // Clean up other, persistent listeners
-                    myClientApp.lifecycle.removeFocusListener(onAppFocus);
-                    myClientApp.lifecycle.removeBlurListener(onAppBlur);
-
-                    // Simulating delay of 500ms
-                    window.setTimeout(() => {
-                        myClientApp.lifecycle.stopped();
-                        if (requireManualToastDismissal) {
-                            myClientApp.alerting.showToastPopup(
-                                lifecycleStatusMessageTitle,
-                                `App Stopped (500ms delay):${lifecycleStatusMessageId}-stop-${count}`, {
-                                    id: `${lifecycleStatusMessageId}-stop-${count}`,
-                                    type: 'error',
-                                    showCloseButton: true,
-                                    timeout: 0
-                                }
-                            );
-                            count++;
-                        } else {
-                            myClientApp.alerting.showToastPopup(
-                                lifecycleStatusMessageTitle,
-                                'App Stopped (500ms delay)', {
-                                    id: lifecycleStatusMessageId,
-                                    type: 'error',
-                                    showCloseButton: true
-                                }
-                            );
-                        }
-
-                        logLifecycleEvent('Notified PC of Successful App Stop', false);
-                    }, 500);
-                });
-
-                function logLifecycleEvent(logText, incommingEvent) {
-                    $tgt = jQuery('.lifecycle-events .log')
-                    var newItem = $('<li>' + logText + '</li>');
-                    newItem.addClass(incommingEvent ? 'incomming' : 'outgoing');
-
-                    $tgt.prepend(newItem);
-                }
-            });
-        </script>
-
-<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
-
-<script>
-    
-    $( document ).ready(function() {
-        //Purecloud Oauth information
-        var platformClient = require('platformClient');
-        var client = platformClient.ApiClient.instance;
-        var clientId = 'f481400e-e257-4529-8b1d-c52ac27575e0';
-        var redirectUri = 'https://jhe277.github.io/LFC2TEST/lfctest2.html'; //clientApp address - same as the clientApp configuration url without parameters
-        var state = 'AdAstra';
-
-        client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
-        
-        //API instances
-        var usersApi = new platformClient.UsersApi();
-        var notificationsApi = new platformClient.NotificationsApi();
-
-        //Perform Implicit Login Grant Authentication
-        client.loginImplicitGrant(clientId, redirectUri, { state: state })
-            .then((data) => {
-                //User Authenticated
-                console.log("Authenticated: " + data);
-                //Make request to GET /api/v2/users/me?expand=presence
-                return usersApi.getUsersMe({ 'expand': ["presence"] });
-            })
-            .then((userMe) => {
-                //Me Response
-                document.querySelector("#Welcome").innerHTML = "Welcome " + userMe.name;
-                console.log("Hello, ${userMe.name}!");
-                return notificationsApi.postNotificationsChannels();
-            }).then((channel) => {
-                //Channel Created
-                //Set WebSocket in Channel
-                var socket = new WebSocket(channel.connectUri);
-                socket.onMessage = onSocketMessage;
-                //Subscribe to conversation events in the queue
-                let topic = [{"id": "v2.routing.queues.52672129-f97b-40c1-b011-f50e6a577259.conversations"}];
-                return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
-            }).catch((err) => {
-                //Handle failure response
-                console.log(err);
-            });
-        
-            //Handler for every Websocket message
-            function onSocketMessage(event){
-                console.log("Websocket Event Received: " + event.data);
-                let data = JSON.parse(event.data);
-                let topic = data.topicName;
-                let eventBody = data.eventBody;
-
-                console.log("Notification: Topic = " + topic);
-                console.log("Notification: Body = " + eventBody);
-
-                //Add a bomb to the Game
-                if ( topic == "v2.routing.queues.52672129-f97b-40c1-b011-f50e6a577259.conversations" ) {
-                    //Do stuff
-                    //addBomb();
-                    myClientApp.alerting.showToastPopup('App LFC2', 'Conversation Event Perusjonotesti1');
-                }
-            };
-        });
-        </script>
-        
-    </body>
+                </script>
+                
+        </body>
 </html>
