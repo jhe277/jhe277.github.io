@@ -70,14 +70,14 @@
                 client.loginImplicitGrant(clientId, redirectUri)
                     .then((data) => {
                         //User Authenticated
-                        console.log("LFC3: Authenticated: " + data);
+                        console.log("LFC4: Authenticated: " + data);
                         //Make request to GET /api/v2/users/me?expand=presence
                         return usersApi.getUsersMe({ 'expand': ["presence"] });
                     })
                     .then((userMe) => {
                         //Me Response
                         document.querySelector("#Welcome").innerHTML = "Welcome " + userMe.name;
-                        console.log("LFC3: Hello, "+userMe.name+"!");
+                        console.log("LFC4: Hello, "+userMe.name+"!");
 
 						let opts = { 
 						  'pageSize': 25, // Number | Page size
@@ -91,7 +91,7 @@
                         return routingApi.getRoutingQueues(opts);
                     }).then((myqueues) => {
 						console.log(`getRoutingQueues success! data: ${JSON.stringify(myqueues, null, 2)}`);
-						//console.log("LFC3: "+myqueues);
+						//console.log("LFC4: "+myqueues);
 						//return notificationsApi.postNotificationsChannels();
 					//}).then((channel) => {
                         //Channel Created
@@ -103,19 +103,19 @@
                         //return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
                     }).catch((err) => {
                         //Handle failure response
-                        console.log("LFC3: "+err);
+                        console.log("LFC4: "+err);
                     });
 					
 					/**
                     //Handler for every Websocket message
                     function onSocketMessage(event){
-                        console.log("LFC3: Websocket Event Received: " + event.data);
+                        console.log("LFC4: Websocket Event Received: " + event.data);
                         let data = JSON.parse(event.data);
                         let topic = data.topicName;
                         let eventBody = data.eventBody;
         
-                        console.log("LFC3: Notification: Topic = " + topic);
-                        console.log("LFC3: Notification: Body = " + eventBody);
+                        console.log("LFC4: Notification: Topic = " + topic);
+                        console.log("LFC4: Notification: Body = " + eventBody);
                     };
 					**/
 
