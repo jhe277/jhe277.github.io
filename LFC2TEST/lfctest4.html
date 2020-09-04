@@ -90,7 +90,10 @@
 
                         return routingApi.getRoutingQueues(opts);
                     }).then((myqueues) => {
-						console.log(`getRoutingQueues success! data: ${JSON.stringify(myqueues, null, 2)}`);
+						$.each(myqueues.entities, function(i, entity) {
+							$("#qlist").append('<li>name: '+entity.name+' id: '+entity.id)
+						});
+						//console.log(`LFC4: getRoutingQueues success! data: ${JSON.stringify(myqueues, null, 2)}`);
 						//console.log("LFC4: "+myqueues);
 						//return notificationsApi.postNotificationsChannels();
 					//}).then((channel) => {
