@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>QNotif2 LFC3 test</title>
+        <title>QNotif LFC4 test</title>
 
         <style>
             body {
@@ -11,7 +11,7 @@
 
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
-	<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
+		<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
 
 		<script>
 			$( document ).ready(function() {
@@ -51,13 +51,44 @@
 					document.querySelector("#myvalue").innerHTML = "Selected: " + $("#queueslist").val();
 				});
 
+				$("#btnsub").click(function() {
+					//create websocket and start listening to events
+					let channel = notificationsApi.postNotificationsChannels();
+					//Set WebSocket in Channel
+					let socket = new WebSocket(channel.connectUri);
+					socket.onmessage = onSocketMessage;
+					//Subscribe to conversation events in the queue
+					let topic = [{"id": $("#queueslist").val()}];
+					//return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+					notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
+					.then(() => {
+						console.log('LFC4: postNotificationsChannelSubscriptions returned successfully.');
+					})
+					.catch((err) => {
+						console.log('LFC4: There was a failure calling postNotificationsChannelSubscriptions');
+						console.error('LFC4: err= '+err);
+					})
+				});
+
+				$("#btndel").click(function() {
+					//delete subscription
+					notificationsApi.deleteNotificationsChannelSubscriptions(channel.id)
+					.then(() => {
+						console.log('LFC4: deleteNotificationsChannelSubscriptions returned successfully.');
+					})
+					.catch((err) => {
+						console.log('LFC4: There was a failure calling deleteNotificationsChannelSubscriptions');
+						console.error('LFC4: err= '+err);
+					})
+				});
+
 				//https://developer.mypurecloud.de/api/rest/client-libraries/javascript/RoutingApi.html#getRoutingQueues
 				
                 //Purecloud Oauth information
                 var platformClient = require('platformClient');
                 var client = platformClient.ApiClient.instance;
                 var clientId = 'f481400e-e257-4529-8b1d-c52ac27575e0';
-                var redirectUri = 'https://jhe277.github.io/LFC2TEST/lfctest4.html'; //clientApp address - same as the clientApp configuration url without parameters
+                var redirectUri = 'https://jhe277.github.io/LFC2TEST/lfctest3.html'; //clientApp address - same as the clientApp configuration url without parameters
         
                 client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
                 
@@ -91,16 +122,15 @@
                         return routingApi.getRoutingQueues(opts);
                     }).then((myqueues) => {
 						$.each(myqueues.entities, function(i, entity) {
-							$("#qlist").append('<li>name: '+entity.name+' id: '+entity.id)
+							//$("#qlist").append('<li>name: '+entity.name+' id: '+entity.id)
 							$("#queueslist").append($('<option>', {
 								value: entity.id,
 								text: entity.name
 							}));
 
-						});
+						};
 						//console.log(`LFC4: getRoutingQueues success! data: ${JSON.stringify(myqueues, null, 2)}`);
 						console.log("LFC4: Got some queues... added to dropdown also.");
-						//console.log("LFC4: "+myqueues);
 						//return notificationsApi.postNotificationsChannels();
 					//}).then((channel) => {
                         //Channel Created
@@ -115,18 +145,27 @@
                         console.log("LFC4: "+err);
                     });
 					
-					/**
+					
                     //Handler for every Websocket message
                     function onSocketMessage(event){
-                        console.log("LFC4: Websocket Event Received: " + event.data);
+                        console.log("LFC4: Websocket Event Received...");
                         let data = JSON.parse(event.data);
                         let topic = data.topicName;
-                        let eventBody = data.eventBody;
-        
                         console.log("LFC4: Notification: Topic = " + topic);
-                        console.log("LFC4: Notification: Body = " + eventBody);
+                        let eventBody = data.eventBody;'
+                        console.log("LFC4: Notification: Body.participants... ");
+						$.each(eventBody.participants, function(i, particip) {
+							$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose+' address: '+particip.address);
+							console.log('LFC4: -----');
+							console.log('LFC4: participant.name: ' +particip.name);
+							console.log('LFC4: participant.purpose: ' +particip.purepose);
+							console.log('LFC4: participant.id: ' +particip.id);
+							console.log('LFC4: participant.address: ' +particip.address);
+							console.log('LFC4: -----');
+						};
+						console.log('LFC4: ======');
                     };
-					**/
+					
 
 			});
 
@@ -148,12 +187,17 @@
 		<br />
 		<h2 id="myvalue">Selected: </h2>
 		<br />
+		<button type="button" id="btnsub">Subscribe to Queue's events</button>
+		<button type="button" id="btndel">Delete subscription</button>
+		<br />
 		<select id="queueslist">
 			<option value="1">Example Queue</option>
 		</select>
+		<br />
 		<h2>Queues list: </h2>
 		<ul id="qlist">
 		</ul>
+		<br />
 
 	</body>
 </html>
