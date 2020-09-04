@@ -164,18 +164,17 @@
 				console.log("LFC4: Notification: Body.participants... ");
 							$.each(eventBody.participants, function(i, particip) {
 								$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose);
-								console.log('LFC4: -----');
 								console.log('LFC4: name: ' +particip.name+' purpose: ' +particip.purpose+' id: ' +particip.id);
 								//console.log('LFC4: address: ' +particip.address);
-								if(jQuery.inArray('connectedTime', particip) > -1) { 
+								if(jQuery.inArray("connectedTime", particip) > -1) { 
 								   //
 								   console.log('LFC4: connectedTime: '+particip.connectedTime);
 								   };
-								if(jQuery.inArray('endTime', particip) > -1) { 
+								if(jQuery.inArray("endTime", particip) > -1) { 
 								   //
 								   console.log('LFC4: connectedTime: '+particip.connectedTime);
 								   };
-								if(jQuery.inArray('state', particip) > -1) { 
+								if($.inArray("state", particip) > -1) { 
 								   //
 								   console.log('LFC4: state: '+particip.state);
 								   };
