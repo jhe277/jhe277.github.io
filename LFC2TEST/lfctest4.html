@@ -14,6 +14,9 @@
 		<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
 
 		<script>
+			//Global scope variables definitions here
+			var keepQConvList = [];
+
 			$( document ).ready(function() {
 				var pnfchannel;
 				$("#qbutton1").click(function() {
@@ -161,8 +164,9 @@
 			let checktopic = "v2.routing.queues."+$("#queueslist").val()+".conversations";
 			if(topic == checktopic) {
 				let eventBody = data.eventBody;
+				let participants = eventBody.participants;
 				console.log("LFC4: Notification: Body.participants... ");
-							$.each(eventBody.participants, function(i, particip) {
+							$.each(participants, function(i, particip) {
 								$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose);
 								console.log('LFC4: name: ' +particip.name+' purpose: ' +particip.purpose+' id: ' +particip.id);
 								//console.log('LFC4: address: ' +particip.address);
