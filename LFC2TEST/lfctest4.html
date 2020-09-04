@@ -157,22 +157,36 @@
                         let data = JSON.parse(event.data);
                         let topic = data.topicName;
                         console.log("LFC4: Notification: Topic = " + topic);
-                        let eventBody = data.eventBody;
-                        console.log("LFC4: Notification: Body.participants... ");
-						$.each(eventBody.participants, function(i, particip) {
-							$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose);
-							console.log('LFC4: -----');
-							console.log('LFC4: name: ' +particip.name+' purpose: ' +particip.purpose+' state: ' +particip.state);
-							console.log('LFC4: id: ' +particip.id);
-							console.log('LFC4: address: ' +particip.address);
-							console.log('LFC4: -----');
-						});
-						console.log('LFC4: ======');
-						$("#qlist").append('<li>======');
-                    };
+			
+			let checktopic = "v2.routing.queues."+$("#queueslist").val()+".conversations";
+			if(topic == checktopic) {
+				let eventBody = data.eventBody;
+				console.log("LFC4: Notification: Body.participants... ");
+							$.each(eventBody.participants, function(i, particip) {
+								$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose);
+								console.log('LFC4: -----');
+								console.log('LFC4: name: ' +particip.name+' purpose: ' +particip.purpose+' id: ' +particip.id);
+								//console.log('LFC4: address: ' +particip.address);
+								if(particip.indexof('connectedTime') > -1) { 
+								   //
+								   console.log('LFC4: connectedTime: '+particip.connectedTime);
+								   };
+								if(particip.indexof('endTime') > -1) { 
+								   //
+								   console.log('LFC4: connectedTime: '+particip.connectedTime);
+								   };
+								if(particip.indexof('state') > -1) { 
+								   //
+								   console.log('LFC4: state: '+particip.state);
+								   };
+								console.log('LFC4: -----');
+							});
+							console.log('LFC4: ======');
+							$("#qlist").append('<li>======');
+			};
+		    };
 					
-
-			});
+		});
 
 		</script>
 
