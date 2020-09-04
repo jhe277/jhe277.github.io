@@ -59,7 +59,7 @@
 					let socket = new WebSocket(channel.connectUri);
 					socket.onmessage = onSocketMessage;
 					//Subscribe to conversation events in the queue
-					let topic = [{"id": v2.routing.queues."+$("#queueslist").val()+".conversations}];
+					let topic = [{"id": "v2.routing.queues."+$("#queueslist").val()+".conversations"}];
 					return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
 					})
 					//.then(() => {
