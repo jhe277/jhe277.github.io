@@ -92,8 +92,14 @@
                     }).then((myqueues) => {
 						$.each(myqueues.entities, function(i, entity) {
 							$("#qlist").append('<li>name: '+entity.name+' id: '+entity.id)
+							$("#queueslist").append($('<option>', {
+								value: entity.id,
+								text: entity.name
+							}));
+
 						});
 						//console.log(`LFC4: getRoutingQueues success! data: ${JSON.stringify(myqueues, null, 2)}`);
+						console.log("LFC4: Got some queues... added to dropdown also.");
 						//console.log("LFC4: "+myqueues);
 						//return notificationsApi.postNotificationsChannels();
 					//}).then((channel) => {
