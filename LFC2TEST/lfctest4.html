@@ -15,7 +15,7 @@
 
 		<script>
 			$( document ).ready(function() {
-			
+				var pnfchannel;
 				$("#qbutton1").click(function() {
 					$("#queueslist").append('<option value="2">Queue 2</option>');
 				});
@@ -55,8 +55,9 @@
 					//create websocket and start listening to events
 					notificationsApi.postNotificationsChannels()
 					.then((channel) => {
+					pnfchannel = channel;
 					//Channel created => Set WebSocket in Channel
-					let socket = new WebSocket(channel.connectUri);
+					var socket = new WebSocket(channel.connectUri);
 					socket.onmessage = onSocketMessage;
 					//Subscribe to conversation events in the queue
 					let topic = [{"id": "v2.routing.queues."+$("#queueslist").val()+".conversations"}];
@@ -76,7 +77,7 @@
 
 				$("#btndel").click(function() {
 					//delete subscription
-					notificationsApi.deleteNotificationsChannelSubscriptions(channel.id)
+					notificationsApi.deleteNotificationsChannelSubscriptions(pnfchannel.id)
 					.then(() => {
 						console.log('LFC4: deleteNotificationsChannelSubscriptions returned successfully.');
 					})
