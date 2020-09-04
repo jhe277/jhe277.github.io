@@ -159,7 +159,7 @@
                         let eventBody = data.eventBody;
                         console.log("LFC4: Notification: Body.participants... ");
 						$.each(eventBody.participants, function(i, particip) {
-							$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose+' address: '+particip.address);
+							$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose);
 							console.log('LFC4: -----');
 							console.log('LFC4: name: ' +particip.name+' purpose: ' +particip.purpose+' state: ' +particip.state);
 							console.log('LFC4: id: ' +particip.id);
