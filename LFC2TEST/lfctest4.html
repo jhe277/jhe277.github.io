@@ -53,14 +53,18 @@
 
 				$("#btnsub").click(function() {
 					//create websocket and start listening to events
-					let channel = notificationsApi.postNotificationsChannels();
+					notificationsApi.postNotificationsChannels()
+					.then((channel) => {
 					//Set WebSocket in Channel
-					let socket = new WebSocket(channel.connectUri);
+					var socket = new WebSocket(channel.connectUri);
 					socket.onmessage = onSocketMessage;
 					//Subscribe to conversation events in the queue
-					let topic = [{"id": $("#queueslist").val()}];
-					//return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
-					notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
+					var topic = [{"id": $("#queueslist").val()}];
+					return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
+					})
+					.then(() => {
+						return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
+					})
 					.then(() => {
 						console.log('LFC4: postNotificationsChannelSubscriptions returned successfully.');
 					})
