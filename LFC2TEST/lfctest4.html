@@ -67,7 +67,7 @@
 					.catch((err) => {
 						console.log('LFC4: There was a failure calling postNotificationsChannelSubscriptions');
 						console.error('LFC4: err= '+err);
-					})
+					});
 				});
 
 				$("#btndel").click(function() {
@@ -79,7 +79,7 @@
 					.catch((err) => {
 						console.log('LFC4: There was a failure calling deleteNotificationsChannelSubscriptions');
 						console.error('LFC4: err= '+err);
-					})
+					});
 				});
 
 				//https://developer.mypurecloud.de/api/rest/client-libraries/javascript/RoutingApi.html#getRoutingQueues
