@@ -156,7 +156,7 @@
                         let data = JSON.parse(event.data);
                         let topic = data.topicName;
                         console.log("LFC4: Notification: Topic = " + topic);
-                        let eventBody = data.eventBody;'
+                        let eventBody = data.eventBody;
                         console.log("LFC4: Notification: Body.participants... ");
 						$.each(eventBody.participants, function(i, particip) {
 							$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose+' address: '+particip.address);
