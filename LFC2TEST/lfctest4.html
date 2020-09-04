@@ -55,16 +55,16 @@
 					//create websocket and start listening to events
 					notificationsApi.postNotificationsChannels()
 					.then((channel) => {
-					//Set WebSocket in Channel
-					var socket = new WebSocket(channel.connectUri);
+					//Channel created => Set WebSocket in Channel
+					let socket = new WebSocket(channel.connectUri);
 					socket.onmessage = onSocketMessage;
 					//Subscribe to conversation events in the queue
-					var topic = [{"id": $("#queueslist").val()}];
+					let topic = [{"id": $("#queueslist").val()}];
 					return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
 					})
-					.then(() => {
-						return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
-					})
+					//.then(() => {
+						//return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
+					//})
 					.then(() => {
 						console.log('LFC4: postNotificationsChannelSubscriptions returned successfully.');
 					})
