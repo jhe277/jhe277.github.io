@@ -164,7 +164,8 @@
 			let checktopic = "v2.routing.queues."+$("#queueslist").val()+".conversations";
 			if(topic == checktopic) {
 				let eventBody = data.eventBody;
-				let participants = eventBody.participants;
+				//let participants = eventBody.participants;
+				let participants = JSON.parse(eventBody.participants);
 				console.log("LFC4: Notification: Body.participants... ");
 							$.each(participants, function(i, particip) {
 								$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose);
