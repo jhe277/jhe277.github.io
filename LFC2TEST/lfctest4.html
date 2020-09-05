@@ -168,20 +168,20 @@
 				//let participants = JSON.parse(eventBody.participants);
 				console.log("LFC4: Notification: Body.participants... ");
 							$.each(participants, function(i, particip) {
-								let pcp2 = JSON.stringify(particip);
-								console.log('LFC4: particip = '+pcp2);
+								let pcp2 = particip;
+								console.log('LFC4: particip = '+JSON.stringify(pcp2));
 								$("#qlist").append('<li>participant name: '+pcp2.name+' id: '+pcp2.id+' purpose: '+pcp2.purpose);
 								console.log('LFC4: name: ' +pcp2.name+' purpose: ' +pcp2.purpose+' id: ' +pcp2.id);
 								//console.log('LFC4: address: ' +particip.address);
-								if(jQuery.inArray("connectedTime", pcp2) > -1) { 
+								if(pcp2.hasOwnProperty("connectedTime")) { 
 								   //
 								   console.log('LFC4: connectedTime: '+pcp2.connectedTime);
 								   };
-								if(jQuery.inArray("endTime", pcp2) > -1) { 
+								if(pcp2.hasOwnProperty("endTime")) { 
 								   //
 								   console.log('LFC4: endTime: '+pcp2.endTime);
 								   };
-								if($.inArray("state", pcp2) > -1) { 
+								if(pcp2.hasOwnProperty("state")) { 
 								   //
 								   console.log('LFC4: state: '+pcp2.state);
 								   };
