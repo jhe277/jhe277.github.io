@@ -168,8 +168,8 @@
 				//let participants = JSON.parse(eventBody.participants);
 				console.log("LFC4: Notification: Body.participants... ");
 							$.each(participants, function(i, particip) {
-								console.log('LFC4: particip = '+particip);
-								let pcp2 = particip;
+								let pcp2 = JSON.stringify(particip);
+								console.log('LFC4: particip = '+pcp2);
 								$("#qlist").append('<li>participant name: '+pcp2.name+' id: '+pcp2.id+' purpose: '+pcp2.purpose);
 								console.log('LFC4: name: ' +pcp2.name+' purpose: ' +pcp2.purpose+' id: ' +pcp2.id);
 								//console.log('LFC4: address: ' +particip.address);
