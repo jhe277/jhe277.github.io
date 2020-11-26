@@ -6,56 +6,8 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://sdk-cdn-mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
         <script>
-            window.$(document).ready(() => {
-            //Page has loaded?
-            var ClientApp = window.purecloud.apps.ClientApp;
-            myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
+            var pCeNV = null;
             
-            //Setup handler for button click
-            window.$('#alertbutton').Click((evt) => {
-                evt.preventDefault();
-                //alert("Created an alert popup in browser!");
-                myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
-                });
-            })
-        </script>
-    </head>
-    <body>
-        <noscript>
-            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
-        </noscript>
-
-        <div id="container">
-            <div id="buttonplace1">
-                <button id="alertbutton" type="submit">Test Alert</button>
-            </div>
-            <div id="buttonplace2">
-                <button id="secondbutton" type="submit">Test 2</button>
-            </div>
-            <div id="buttonplace3">
-                <button id="thirdbutton" type="submit">Test 3</button>
-            </div>
-        </div>
-
-        <h1>URL Interpolation</h1>
-        <p>
-            Data can be seeded into an app (Standalone or Widget) via URL string replacement.
-        </p>
-        <hr>
-
-        <h2>URL</h2>
-        <p>
-            <span class="ex-url"></span>
-        </p>
-        <dl class="url-vars">
-        </dl>
-
-        <h2>Localization Demo</h2>
-        <p>
-            <span class="welcome-text"></span>
-        </p>
-
-        <script>
             (function () {
                 var DEFAULT_LANG_TAG = 'en-us';
                 var langTag = null;
@@ -111,10 +63,60 @@
 
                 if (pcEnv) {
                     $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
+                    pCeNV = pcEnv;
                 }
 
                 $('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
             })();
+
+            window.$(document).ready(() => {
+            //Page has loaded?
+            var ClientApp = window.purecloud.apps.ClientApp;
+            myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pCeNV })
+            
+            //Setup handler for button click
+            window.$('#alertbutton').Click((evt) => {
+                evt.preventDefault();
+                //alert("Created an alert popup in browser!");
+                myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
+                });
+            })
         </script>
+    </head>
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <div id="container">
+            <div id="buttonplace1">
+                <button id="alertbutton" type="submit">Test Alert</button>
+            </div>
+            <div id="buttonplace2">
+                <button id="secondbutton" type="submit">Test 2</button>
+            </div>
+            <div id="buttonplace3">
+                <button id="thirdbutton" type="submit">Test 3</button>
+            </div>
+        </div>
+
+        <h1>URL Interpolation</h1>
+        <p>
+            Data can be seeded into an app (Standalone or Widget) via URL string replacement.
+        </p>
+        <hr>
+
+        <h2>URL</h2>
+        <p>
+            <span class="ex-url"></span>
+        </p>
+        <dl class="url-vars">
+        </dl>
+
+        <h2>Localization Demo</h2>
+        <p>
+            <span class="welcome-text"></span>
+        </p>
+
     </body>
 </html>
