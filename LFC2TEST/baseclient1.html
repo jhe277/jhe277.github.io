@@ -6,14 +6,16 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://sdk-cdn-mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
         <script>
+            myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
+            
             window.$(document).ready(() => {
             //Page has loaded?
 
             //Setup handler for button click
             window.$('#alertbutton').Click((evt) => {
                 evt.preventDefault();
-                alert("Created an alert popup in browser!");
-                //myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
+                //alert("Created an alert popup in browser!");
+                myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
                 });
             })
         </script>
