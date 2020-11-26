@@ -13,6 +13,9 @@
             var ClientApp = window.purecloud.apps.ClientApp;
             myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pCeNV })
             
+            //show pCeNV in page
+            $('.pcenvinfo').text(pCeNV);
+                                  
             //Setup handler for button click
             window.$('#alertbutton').Click((evt) => {
                 evt.preventDefault();
@@ -38,7 +41,11 @@
                 <button id="thirdbutton" type="submit">Test 3</button>
             </div>
         </div>
-
+        
+        <p>
+            <span class=".pcenvinfo"></span>
+        </p>
+        
         <h1>URL Interpolation</h1>
         <p>
             Data can be seeded into an app (Standalone or Widget) via URL string replacement.
