@@ -6,12 +6,38 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://sdk-cdn-mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
         <script>
-            var pCeNV = null;
+            function getParamValue(paramPairs){
+                if(decodeURIComponent){
+                    return decodeURIComponent(paramPairs[1]);
+                }
+
+                return paramPairs[1];
+            }
+           
+            var queryString = window.location.search.substring(1);
+            var pairs = queryString.split('&');
+            var pcEnv = null;
+            for (var i = 0; i < pairs.length; i++)
+            {
+                var currParam = pairs[i].split('=');
+                var currLi = '';
+
+                if(currParam[0] === 'pcEnvironment') {
+                    pcEnv = getParamValue(currParam);
+                } else if(currParam[0] === 'environment' && pcEnv === null) {
+                    pcEnv = getParamValue(currParam);
+                }
+            }
+
+            if (pcEnv) {
+                $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
+            }
+
             
             window.$(document).ready(() => {
             //Page has loaded?
-            var ClientApp = window.purecloud.apps.ClientApp;
-            myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pCeNV })
+            //var ClientApp = window.purecloud.apps.ClientApp;
+            myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
             
             //show pCeNV in page
             $('.pcenvinfo').text(pCeNV);
