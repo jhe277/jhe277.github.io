@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ClientApp Base test</title>
+        <!-- Defining needed stuff -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://sdk-cdn-mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
+        <script src="baseclient1.js"></script>
+    </head>
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <div id="container">
+            <div id="buttonplace1">
+                <button id="alertbutton" type="submit">Test Alert</button>
+            </div>
+            <div id="buttonplace2">
+                <button id="secondbutton" type="submit">Test 2</button>
+            </div>
+            <div id="buttonplace3">
+                <button id="thirdbutton" type="submit">Test 3</button>
+            </div>
+        </div>
+
+        <h1>URL Interpolation</h1>
+        <p>
+            Data can be seeded into an app (Standalone or Widget) via URL string replacement.
+        </p>
+        <hr>
+
+        <h2>URL</h2>
+        <p>
+            <span class="ex-url"></span>
+        </p>
+        <dl class="url-vars">
+        </dl>
+
+        <h2>Localization Demo</h2>
+        <p>
+            <span class="welcome-text"></span>
+        </p>
+
+        <script>
+            (function () {
+                var DEFAULT_LANG_TAG = 'en-us';
+                var langTag = null;
+                var welcomeTokens = {
+                    de: "Willkommen bei PureCloud",
+                    'en-us': "Welcome to Purecloud",
+                    es: "Bienvenido a PureCloud",
+                    fr: "Bienvenue dans PureCloud",
+                    it: "Benvenuti a PureCloud",
+                    ja: "PureCloud へようこそ!",
+                    ko: "PureCloud 시작",
+                    nl: "Welkom bij PureCloud",
+                    no: "Velkommen til PureCloud",
+                    pl: "Witamy w Purecloud",
+                    'pt-br': "Bem-vindo ao PureCloud",
+                    sv: "Välkommen till PureCloud",
+                    th: "ขอต้อนรับสู่ PureCloud",
+                    tr: "Purecloud'a hoş geldiniz",
+                    'zh-cn': "欢迎使用 Purecloud"
+                };
+
+                function getParamValue(paramPairs){
+                    if(decodeURIComponent){
+                        return decodeURIComponent(paramPairs[1]);
+                    }
+
+                    return paramPairs[1];
+                }
+
+                $('.ex-url').text(window.location);
+                var queryString = window.location.search.substring(1);
+                var pairs = queryString.split('&');
+                var pcEnv = null;
+                for (var i = 0; i < pairs.length; i++)
+                {
+                    var currParam = pairs[i].split('=');
+                    var currLi = '';
+
+                    if(currParam[0] === 'langTag') {
+                        langTag = getParamValue(currParam);
+                        currLi = '<dt>{{pcLangTag}}</dt><dd>' + langTag + '</dd>';
+                    } else if(currParam[0] === 'pcEnvironment') {
+                        pcEnv = getParamValue(currParam);
+                    } else if(currParam[0] === 'environment' && pcEnv === null) {
+                        pcEnv = getParamValue(currParam);
+                    }
+
+                    if (currLi) {
+                        $('dl.url-vars').append(currLi);
+                    }
+                }
+
+                if (pcEnv) {
+                    $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
+                }
+
+                $('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
+            })();
+        </script>
+    </body>
+</html>
