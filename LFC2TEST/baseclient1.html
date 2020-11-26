@@ -36,11 +36,11 @@
             
             window.$(document).ready(() => {
             //Page has loaded?
-            //var ClientApp = window.purecloud.apps.ClientApp;
-            myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
+            var ClientApp = window.purecloud.apps.ClientApp;
+            myClientApp = new ClientApp({ pcEnvironment: pcEnv })
             
             //show pCeNV in page
-            $('.pcenvinfo').text(pCeNV);
+            $('.pcenvinfo').text(pcEnv);
                                   
             //Setup handler for button click
             window.$('#alertbutton').Click((evt) => {
