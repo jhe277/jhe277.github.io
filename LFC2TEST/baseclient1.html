@@ -31,6 +31,8 @@
 
             if (pcEnv) {
                 $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
+                //show pCeNV in page
+                $('.pcenvinfo').text(pcEnv);                                  
             }
 
             
@@ -39,9 +41,6 @@
             var ClientApp = window.purecloud.apps.ClientApp;
             myClientApp = new ClientApp({ pcEnvironment: pcEnv })
             
-            //show pCeNV in page
-            $('.pcenvinfo').text(pcEnv);
-                                  
             //Setup handler for button click
             window.$('#alertbutton').Click((evt) => {
                 evt.preventDefault();
