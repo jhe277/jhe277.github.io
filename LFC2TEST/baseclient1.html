@@ -6,11 +6,11 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://sdk-cdn-mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
         <script>
-            myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
-            
             window.$(document).ready(() => {
             //Page has loaded?
-
+            var ClientApp = window.purecloud.apps.ClientApp;
+            myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
+            
             //Setup handler for button click
             window.$('#alertbutton').Click((evt) => {
                 evt.preventDefault();
