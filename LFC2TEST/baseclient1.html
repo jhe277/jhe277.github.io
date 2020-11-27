@@ -46,11 +46,11 @@
                             pcEnv = pair[1];
                         }
                     
-                    if (currLi) {
-                        $('dl.url-vars').append(currLi);
-                    }
-
                 } 
+
+                if (currLi) {
+                    $('dl.url-vars').append(currLi);
+                }
 
                 if (pcEnv) {
                     $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
