@@ -45,6 +45,11 @@
                         } else if(pair[0] === 'environment' && pcEnv === null) {
                             pcEnv = pair[1];
                         }
+                    
+                    if (currLi) {
+                        $('dl.url-vars').append(currLi);
+                    }
+
                 } 
 
                 if (pcEnv) {
