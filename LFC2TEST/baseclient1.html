@@ -66,7 +66,8 @@
                 window.$('#alertbutton').click((evt) => {
                     evt.preventDefault();
                     //alert("Created an alert popup in browser!");
-                    myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
+                    //myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
+                    purecloud.apps.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
                     });
             })
         </script>
