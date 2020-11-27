@@ -63,7 +63,7 @@
                 let myClientApp = new ClientApp({ pcEnvironment: pcEnv })
 
                 //Setup handler for button click
-                window.$('#alertbutton').Click((evt) => {
+                window.$('#alertbutton').click((evt) => {
                     evt.preventDefault();
                     //alert("Created an alert popup in browser!");
                     myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
