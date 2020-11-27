@@ -59,8 +59,8 @@
                 //$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
                 window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
 
-                var ClientApp = window.purecloud.apps.ClientApp;
-                var myClientApp = new ClientApp({ pcEnvironment: pcEnv })
+                let ClientApp = window.purecloud.apps.ClientApp;
+                let myClientApp = new ClientApp({ pcEnvironment: pcEnv })
 
                 //Setup handler for button click
                 window.$('#alertbutton').Click((evt) => {
