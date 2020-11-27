@@ -27,6 +27,8 @@
                 fi: "Tervetuloa Genesys Cloudiin!"
             };
 
+            var myClientApp = null;
+            
             window.$(document).ready(() => {
                 //Page has loaded?
                 //$('.ex-url').text(window.location);
@@ -59,8 +61,8 @@
                 //$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
                 window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
 
-                let ClientApp = window.purecloud.apps.ClientApp;
-                let myClientApp = new ClientApp({ pcEnvironment: pcEnv })
+                //ClientApp = window.purecloud.apps.ClientApp;
+                myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
 
                 //Setup handler for button click
                 window.$('#alertbutton').click((evt) => {
