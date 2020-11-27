@@ -60,7 +60,7 @@
                 window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
 
                 var ClientApp = window.purecloud.apps.ClientApp;
-                myClientApp = new ClientApp({ pcEnvironment: pcEnv })
+                var myClientApp = new ClientApp({ pcEnvironment: pcEnv })
 
                 //Setup handler for button click
                 window.$('#alertbutton').Click((evt) => {
