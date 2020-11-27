@@ -30,7 +30,8 @@
 
             window.$(document).ready(() => {
                 //Page has loaded?
-                $('.ex-url').text(window.location);
+                //$('.ex-url').text(window.location);
+                window.$('.ex-url').text(window.location);
                 var queryString2 = window.location.search;
                 var paramString = queryString2.split('?')[1]; 
                 var queryString = new URLSearchParams(paramString); 
@@ -51,7 +52,8 @@
                     $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
                 }
 
-                $('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
+                //$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
+                window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
 
                 var ClientApp = window.purecloud.apps.ClientApp;
                 myClientApp = new ClientApp({ pcEnvironment: pcEnv })
