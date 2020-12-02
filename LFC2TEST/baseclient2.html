@@ -65,7 +65,7 @@
                 myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
 
                 //Setup handler for button click
-                window.$('#alertbutton').click((evt) => {
+                $('#alertbutton').click((evt) => {
                     evt.preventDefault();
                     //alert("Created an alert popup in browser!");
                     myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
