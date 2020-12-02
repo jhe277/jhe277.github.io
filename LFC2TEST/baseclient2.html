@@ -64,9 +64,9 @@
                 window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
 
                 //Setup handler for button click
-                $('#alertbutton').click((evt) => {
+                window.$('#alertbutton').click((evt) => {
                     evt.preventDefault();
-                    //alert("Created an alert popup in browser!");
+                    alert("Created an alert popup in browser!");
                     myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
                     });
             })();
