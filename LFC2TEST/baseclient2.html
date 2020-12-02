@@ -27,7 +27,6 @@
                 fi: "Tervetuloa Genesys Cloudiin!"
             };
 
-            var myClientApp = null;
             
             $( document ).ready(function() {
                 //Page has loaded?
@@ -56,8 +55,8 @@
 
                 if (pcEnv) {
                     $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
-                    //ClientApp = window.purecloud.apps.ClientApp;
-                    myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv });
+                    var ClientApp = window.purecloud.apps.ClientApp;
+                    var myClientApp = new ClientApp({ pcEnvironment: pcEnv });
                }
 
                 //$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
@@ -69,7 +68,14 @@
                     alert("Created an alert popup in browser!");
                     myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
                     });
+
+                function TestAlertButton2() {
+                    alert("Created an alert popup in browser!");
+                    myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');                   
+                };
+
             })();
+        
         </script>
     </head>
     <body>
@@ -82,7 +88,7 @@
                 <button id="alertbutton" type="submit">Test Alert</button>
             </div>
             <div id="buttonplace2">
-                <button id="secondbutton" type="submit">Test 2</button>
+                <button id="secondbutton" type="submit" OnClick="TestAlertButton2()">Test 2</button>
             </div>
             <div id="buttonplace3">
                 <button id="thirdbutton" type="submit">Test 3</button>
