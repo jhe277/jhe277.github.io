@@ -56,13 +56,12 @@
 
                 if (pcEnv) {
                     $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
-                }
+                    //ClientApp = window.purecloud.apps.ClientApp;
+                    myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv });
+               }
 
                 //$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
                 window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
-
-                //ClientApp = window.purecloud.apps.ClientApp;
-                myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv })
 
                 //Setup handler for button click
                 $('#alertbutton').click((evt) => {
