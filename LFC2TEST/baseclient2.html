@@ -4,7 +4,7 @@
         <title>ClientApp Base test</title>
         <!-- Defining needed stuff -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://sdk-cdn-mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.min.js"></script>
+        <!-- <script src="https://sdk-cdn-mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.min.js"></script> -->
         <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-49c1570bfd8967d8861435e0e7178035.min.js"></script>
         <script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
         <script>
@@ -28,8 +28,6 @@
                 'zh-cn': "欢迎使用 Purecloud",
                 fi: "Tervetuloa Genesys Cloudiin!"
             };
-
-            var ClientApp = require('purecloud-client-app-sdk');
             
             $( document ).ready(function() {
                 //Page has loaded?
@@ -58,7 +56,7 @@
 
                 if (pcEnv) {
                     $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
-                    //var ClientApp = window.purecloud.apps.ClientApp;
+                    var ClientApp = window.purecloud.apps.ClientApp;
                     var myClientApp = new ClientApp({ pcEnvironment: pcEnv });
                }
 
