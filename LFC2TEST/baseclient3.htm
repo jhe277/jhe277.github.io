@@ -80,6 +80,9 @@
                 //$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
                 window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
 
+		$("#queueslist").change(function() {
+			document.querySelector("#myvalue").innerHTML = "Selected: " + $("#queueslist").val();
+		});
 
 
                 // Add Platform Api and related login stuff here - because we're using pcEnv with this
