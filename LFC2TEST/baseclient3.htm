@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ClientAppSDK and PlatformSDK Base test - BASECLIENT3</title>
+        <!-- Defining needed stuff -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <!-- <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script> -->
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-49c1570bfd8967d8861435e0e7178035.min.js"></script>
+		<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
+
+        <script>
+
+            // Setup language versions for welcome texts here as Global
+            var DEFAULT_LANG_TAG = 'en-us';
+            var langTag = null;
+            var welcomeTokens = {
+                de: "Willkommen bei PureCloud",
+                'en-us': "Welcome to Purecloud",
+                es: "Bienvenido a PureCloud",
+                fr: "Bienvenue dans PureCloud",
+                it: "Benvenuti a PureCloud",
+                ja: "PureCloud へようこそ!",
+                ko: "PureCloud 시작",
+                nl: "Welkom bij PureCloud",
+                no: "Velkommen til PureCloud",
+                pl: "Witamy w Purecloud",
+                'pt-br': "Bem-vindo ao PureCloud",
+                sv: "Välkommen till PureCloud",
+                th: "ขอต้อนรับสู่ PureCloud",
+                tr: "Purecloud'a hoş geldiniz",
+                'zh-cn': "欢迎使用 Purecloud",
+                fi: "Tervetuloa Genesys Cloudiin!"
+            };
+
+            var prgName = 'BASECLIENT3';
+
+
+
+
+
+
+            $( document ).ready(function() {
+
+
+
+                // Client App Setup - this pcEnv can be used for hosts setup later 
+                //Page has loaded?
+                //$('.ex-url').text(window.location);
+                window.$('.ex-url').text(window.location);
+                var queryString2 = window.location.search;
+                var paramString = queryString2.split('?')[1]; 
+                var queryString = new URLSearchParams(paramString); 
+
+                var pcEnv = null;
+                for (let pair of queryString.entries()) { 
+                    if(pair[0] === 'langTag') {
+                            langTag = pair[1];
+                            currLi = '<dt>{{pcLangTag}}</dt><dd>' + langTag + '</dd>';
+                        } else if(pair[0] === 'pcEnvironment') {
+                            pcEnv = pair[1];
+                        } else if(pair[0] === 'environment' && pcEnv === null) {
+                            pcEnv = pair[1];
+                        }
+                    
+                } 
+
+
+                // Update information to old objects here 
+                if (currLi) {
+                    $('dl.url-vars').append(currLi);
+                }
+
+                if (pcEnv) {
+                    $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
+                    var ClientApp = window.purecloud.apps.ClientApp;
+                    var myClientApp = new ClientApp({ pcEnvironment: pcEnv });
+                }
+
+                //
+                //$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
+                window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
+
+
+
+                // Add Platform Api and related login stuff here - because we're using pcEnv with this
+
+
+                //Purecloud Oauth information
+                var platformClient = require('platformClient');
+                var client = platformClient.ApiClient.instance;
+                var clientId = 'f481400e-e257-4529-8b1d-c52ac27575e0';
+                var redirectUri = 'https://jhe277.github.io/LFC2TEST/lfctest4.html'; //clientApp address - same as the clientApp configuration url without parameters
+        
+                //client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
+                //console.log('LFC4: Host data: ' +platformClient.PureCloudRegionHosts.eu_central_1);
+                client.setEnvironment(pcEnv);
+                console.log('LFC4: Host data: ' +pcEnv);
+				
+                //API instances
+                var usersApi = new platformClient.UsersApi();
+                var notificationsApi = new platformClient.NotificationsApi();
+                var routingApi = new platformClient.RoutingApi();
+        
+                //Perform Implicit Login Grant Authentication
+                client.loginImplicitGrant(clientId, redirectUri)
+                    .then((data) => {
+                        //User Authenticated
+                        console.log("LFC4: Authenticated: " + data);
+                        //Make request to GET /api/v2/users/me?expand=presence
+                        return usersApi.getUsersMe({ 'expand': ["presence"] });
+                    })
+                    .then((userMe) => {
+                        //Me Response
+                        document.querySelector("#Welcome").innerHTML = "Welcome " + userMe.name;
+                        console.log("LFC4: Hello, "+userMe.name+"!");
+
+						let opts = { 
+						  'pageSize': 100, // Number | Page size
+						  'pageNumber': 1, // Number | Page number
+						  'sortBy': "name" //, String | Sort by
+						  //'name': "name_example", // String | Name
+						  //'id': ["id_example"], // [String] | ID(s)
+						  //'divisionId': ["divisionId_example"] // [String] | Division ID(s)
+						};
+
+                        return routingApi.getRoutingQueues(opts);
+                    }).then((myqueues) => {
+						$.each(myqueues.entities, function(i, entity) {
+							//$("#qlist").append('<li>name: '+entity.name+' id: '+entity.id)
+							$("#queueslist").append($('<option>', {
+								value: entity.id,
+								text: entity.name
+							}));
+
+						});
+						console.log("LFC4: Got some queues... added to dropdown also.");
+                    }).catch((err) => {
+                        //Handle failure response
+                        console.log("LFC4: "+err);
+                    });
+					
+
+
+                //Setup handler for button click - for old objects
+                window.$('#alertbutton').click((evt) => {
+                    evt.preventDefault();
+                    alert("Created an alert popup in browser!");
+                    myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
+                    });
+            })();
+        
+        </script>
+    </head>
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+
+        <!-- New object here -->
+
+
+
+
+        <!-- Old objects here -->
+        <h1 id="Welcome" width="100%" align="center">Welcome</h1>
+		<br />
+		<h2 id="myvalue">Selected: </h2>
+		<br />
+		<button type="button" id="btnsub">Subscribe to Queue's events</button>
+		<button type="button" id="btndel">Delete subscription</button>
+		<br />
+		<select id="queueslist">
+			<option value="1">Example Queue</option>
+		</select>
+		<br />
+		<h2>Queues list: </h2>
+		<ul id="qlist">
+		</ul>
+		<br />
+
+
+        <div id="container">
+            <div id="buttonplace1">
+                <button id="alertbutton" type="submit">Test Alert</button>
+            </div>
+        </div>
+        
+        <p>
+            <span class=".pcenvinfo"></span>
+        </p>
+        
+        <h1>URL Interpolation</h1>
+        <p>
+            Data can be seeded into an app (Standalone or Widget) via URL string replacement.
+        </p>
+        <hr>
+
+        <h2>URL</h2>
+        <p>
+            <span class="ex-url"></span>
+        </p>
+        <dl class="url-vars">
+        </dl>
+
+        <h2>Localization Demo</h2>
+        <p>
+            <span class="welcome-text"></span>
+        </p>
+
+        <h2>Need to logout?</h2>
+        <P>
+            <href="https://login.mypurecloud.de/logout">Logout</href>
+        </P>
+    </body>
+</html>
