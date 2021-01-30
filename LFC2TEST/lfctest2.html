@@ -73,7 +73,7 @@
                 var redirectUri = 'https://jhe277.github.io/LFC2TEST/lfctest2.html'; //clientApp address - same as the clientApp configuration url without parameters
         
                 client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
-                
+                console.log("LFC2: setEnvironment Host: " + platformClient.PureCloudRegionHosts.eu_central_1);
                 //API instances
                 var usersApi = new platformClient.UsersApi();
                 var notificationsApi = new platformClient.NotificationsApi();
