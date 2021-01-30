@@ -94,7 +94,7 @@
                 //client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
                 //console.log('LFC4: Host data: ' +platformClient.PureCloudRegionHosts.eu_central_1);
                 client.setEnvironment(pcEnv);
-                console.log('LFC4: Host data: ' +pcEnv);
+                console.log(prgName+': Host data: ' +pcEnv);
 				
                 //API instances
                 var usersApi = new platformClient.UsersApi();
@@ -105,14 +105,14 @@
                 client.loginImplicitGrant(clientId, redirectUri)
                     .then((data) => {
                         //User Authenticated
-                        console.log("LFC4: Authenticated: " + data);
+                        console.log(prgName+": Authenticated: " + data);
                         //Make request to GET /api/v2/users/me?expand=presence
                         return usersApi.getUsersMe({ 'expand': ["presence"] });
                     })
                     .then((userMe) => {
                         //Me Response
                         document.querySelector("#Welcome").innerHTML = "Welcome " + userMe.name;
-                        console.log("LFC4: Hello, "+userMe.name+"!");
+                        console.log(prgName+": Hello, "+userMe.name+"!");
 
 						let opts = { 
 						  'pageSize': 100, // Number | Page size
@@ -133,10 +133,10 @@
 							}));
 
 						});
-						console.log("LFC4: Got some queues... added to dropdown also.");
+						console.log(prgName+": Got some queues... added to dropdown also.");
                     }).catch((err) => {
                         //Handle failure response
-                        console.log("LFC4: "+err);
+                        console.log(prgName+": "+err);
                     });
 					
 
@@ -209,8 +209,6 @@
         </p>
 
         <h2>Need to logout?</h2>
-        <P>
             <href="https://login.mypurecloud.de/logout">Logout</href>
-        </P>
     </body>
 </html>
