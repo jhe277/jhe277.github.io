@@ -69,7 +69,14 @@
                     alert("Created an alert popup in browser!");
                     myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
                     });
-            })();
+                
+                //TestAlertButton2 function
+                function TestAlertButton2() {
+                    alert("Created an alert popup in browser (from func)!");
+                    myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI (from func)');
+                }
+                
+            });
         
         </script>
     </head>
