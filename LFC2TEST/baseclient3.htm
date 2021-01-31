@@ -217,18 +217,19 @@
                     });
 		
                 window.$('#btn1').click((evt) => {
-                    evt.preventDefault();
-		    usersApi.getUsersMe({ 'expand': ["presence"] })
-			.then((userMe) => {
-	                        //Me Response
-			    	let uName = userMe.name+" !!";
-			    	myClientApp.alerting.showToastPopup('Hello '+uName, 'Btn1 API alert in Genesys Cloud UI');
-			}).catch((err) => {
-	                        //Handle failure response
-        	                console.log(prgName+": "+err);
-	                        myClientApp.alerting.showToastPopup('Hello (API error)', 'Btn1 alert in Genesys Cloud UI');
-                    	});
-                    });
+			evt.preventDefault();
+			usersApi.getUsersMe({ 'expand': ["presence"] })
+				.then((userMe) => {
+					//Me Response
+					let uTitle = 'Hello '+userMe.name;
+					let uMsg = 'Btn1 API alert in Genesys Cloud UI'
+					myClientApp.alerting.showToastPopup(uTitle, uMsg);
+				}).catch((err) => {
+					//Handle failure response
+					console.log(prgName+": "+err);
+					//myClientApp.alerting.showToastPopup('Hello (API Error)', 'Btn1 alert in Genesys Cloud UI');
+				});
+                });
 		
                 window.$('#btn2').click((evt) => {
                     evt.preventDefault();
