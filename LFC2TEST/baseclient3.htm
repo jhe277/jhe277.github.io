@@ -175,7 +175,7 @@
 			.then((userMe) => {
 	                        //Me Response
 			    	let uName = userMe.name+" !!";
-			    	myClientApp.alerting.showToastPopup('Hello'+uName, 'Btn1 API alert in Genesys Cloud UI');
+			    	myClientApp.alerting.showToastPopup('Hello '+uName, 'Btn1 API alert in Genesys Cloud UI');
 			}).catch((err) => {
 	                        //Handle failure response
         	                console.log(prgName+": "+err);
