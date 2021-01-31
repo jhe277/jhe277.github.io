@@ -63,14 +63,47 @@
 
             var prgName = 'BASECLIENT3';
 
+            var fromDtTokens = {
+                de: "Willkommen bei PureCloud",
+                'en-us': "From",
+                es: "Bienvenido a PureCloud",
+                fr: "Bienvenue dans PureCloud",
+                it: "Benvenuti a PureCloud",
+                ja: "PureCloud へようこそ!",
+                ko: "PureCloud 시작",
+                nl: "Welkom bij PureCloud",
+                no: "Fra",
+                pl: "Witamy w Purecloud",
+                'pt-br': "Bem-vindo ao PureCloud",
+                sv: "Från",
+                th: "ขอต้อนรับสู่ PureCloud",
+                tr: "Purecloud'a hoş geldiniz",
+                'zh-cn': "欢迎使用 Purecloud",
+                fi: "Alkaen"
+            };
 
-
+            var toDtTokens = {
+                de: "Willkommen bei PureCloud",
+                'en-us': "To",
+                es: "Bienvenido a PureCloud",
+                fr: "Bienvenue dans PureCloud",
+                it: "Benvenuti a PureCloud",
+                ja: "PureCloud へようこそ!",
+                ko: "PureCloud 시작",
+                nl: "Welkom bij PureCloud",
+                no: "Til",
+                pl: "Witamy w Purecloud",
+                'pt-br': "Bem-vindo ao PureCloud",
+                sv: "Till",
+                th: "ขอต้อนรับสู่ PureCloud",
+                tr: "Purecloud'a hoş geldiniz",
+                'zh-cn': "欢迎使用 Purecloud",
+                fi: "Päättyen"
+            };
 
 
 
             $( document ).ready(function() {
-
-
 
                 // Client App Setup - this pcEnv can be used for hosts setup later 
                 //Page has loaded?
@@ -108,6 +141,9 @@
                 //
                 //$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
                 window.$('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
+
+                window.$('.from-text').text(fromDtTokens[langTag] || fromDtTokens[DEFAULT_LANG_TAG]);
+                window.$('.to-text').text(toDtTokens[langTag] || toDtTokens[DEFAULT_LANG_TAG]);
 
 		$("#queueslist").change(function() {
 			document.querySelector("#myvalue").innerHTML = "Selected: " + $("#queueslist").val();
@@ -234,8 +270,8 @@
 	<button type="button" id="btn2" class="button2">1st Button</button>
 	<BR>
 	<BR>
-        From: <input type="text" id="datepicker1"></input>
-        To: <input type="text" id="datepicker2"></input>
+	<span class="from-text">From</span>: <input type="text" id="datepicker1"></input>
+	<span class="to-text">To</span>: <input type="text" id="datepicker2"></input>
         <br \>
         <button type="button" id="btn3" class="button3">Check Date Range</button>
         <br \>
