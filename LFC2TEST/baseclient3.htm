@@ -24,7 +24,10 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <!-- <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script> -->
         <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-49c1570bfd8967d8861435e0e7178035.min.js"></script>
-		<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
+	<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
+
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
         <script>
 
@@ -188,6 +191,26 @@
                     myClientApp.alerting.showToastPopup('Hello', 'Btn2 alert in Genesys Cloud UI');
                     });
 
+                $("#datepicker1").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: false,
+                    dateFormat: "yy-mm-dd"
+                });
+
+                $("#datepicker2").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: false,
+                    dateFormat: "yy-mm-dd"
+                });
+		    
+                $("#btn3").click(function() {
+                    var fromDt = $("#datepicker1").val();
+                    var toDt = $("#datepicker2").val();
+					alert('Date range '+fromDt+'T00:00:00.000Z/'+toDt+'T23:59:59.999Z');
+                });
+
 	    })();
         
         </script>
@@ -203,6 +226,12 @@
 	<button type="button" id="btn2" class="button2">1st Button</button>
 	<BR>
 	<BR>
+        From: <input type="text" id="datepicker1"></input>
+        To: <input type="text" id="datepicker2"></input>
+        <br \>
+        <button type="button" id="btn3" class="button2">Check Date Range</button>
+        <br \>
+        <br \>
 
         <!-- Old objects here -->
         <h1 id="Welcome" width="100%" align="center">Welcome</h1>
