@@ -2,6 +2,24 @@
 <html>
     <head>
         <title>ClientAppSDK and PlatformSDK Base test - BASECLIENT3</title>
+        <style>
+            .button1 {
+                width: 200px;
+                height: 100px;
+                border-radius: 20px;
+                background-color: #AF5AFE;
+                font-weight: bold;
+                color: white;
+              }        
+              .button2 {
+                width: 150px;
+                height: 75px;
+                border-radius: 5px 25px;
+                background-color: #AF5AFE;
+                color: white;
+              }
+	</style>
+	    
         <!-- Defining needed stuff -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <!-- <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script> -->
@@ -150,7 +168,27 @@
                     alert("Created an alert popup in browser!");
                     myClientApp.alerting.showToastPopup('Hello', 'alert in Genesys Cloud UI');
                     });
-            })();
+		
+                window.$('#btn1').click((evt) => {
+                    evt.preventDefault();
+		    usersApi.getUsersMe({ 'expand': ["presence"] })
+			.then((userMe) => {
+	                        //Me Response
+			    	let uName = userMe.name+" !!";
+			    	myClientApp.alerting.showToastPopup('Hello'+uName, 'Btn1 API alert in Genesys Cloud UI');
+			}).catch((err) => {
+	                        //Handle failure response
+        	                console.log(prgName+": "+err);
+                    	});
+                    myClientApp.alerting.showToastPopup('Hello', 'Btn1 alert in Genesys Cloud UI');
+                    });
+		
+                window.$('#btn2').click((evt) => {
+                    evt.preventDefault();
+                    myClientApp.alerting.showToastPopup('Hello', 'Btn2 alert in Genesys Cloud UI');
+                    });
+
+	    })();
         
         </script>
     </head>
@@ -161,9 +199,10 @@
 
 
         <!-- New object here -->
-
-
-
+	<button type="button" id="btn1" class="button1">1st Button</button>
+	<button type="button" id="btn2" class="button2">1st Button</button>
+	<BR>
+	<BR>
 
         <!-- Old objects here -->
         <h1 id="Welcome" width="100%" align="center">Welcome</h1>
