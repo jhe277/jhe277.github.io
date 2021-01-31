@@ -226,8 +226,8 @@
 			}).catch((err) => {
 	                        //Handle failure response
         	                console.log(prgName+": "+err);
+	                        myClientApp.alerting.showToastPopup('Hello (API error)', 'Btn1 alert in Genesys Cloud UI');
                     	});
-                    myClientApp.alerting.showToastPopup('Hello', 'Btn1 alert in Genesys Cloud UI');
                     });
 		
                 window.$('#btn2').click((evt) => {
