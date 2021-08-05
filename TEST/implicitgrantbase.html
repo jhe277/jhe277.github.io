@@ -162,7 +162,7 @@
 					xhr.open("POST", "https://apps.mypurecloud.de//uploads/v4/services/workforcemanagement/businessunits/10c9e87e-4da2-4499-98a0-0272ce9852db/weeks/2021-08-02/schedules");
 					//xhr.setRequestHeader("Content-Type", "application/json");
 					xhr.setRequestHeader("Content-Type", "multipart/form-data");
-					xhr.setRequestHeader("bearer", mytoken);
+					xhr.setRequestHeader("Authorization","bearer "+mytoken);
 					xhr.send(jsonSched);
 
 				});
