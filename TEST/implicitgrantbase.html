@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Genesys Cloud Implicit Grant Base</title>
+
+        <style>
+            body {
+                margin: 0;
+            }
+			.grid-container {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				grid-gap: 20px;
+			}
+        </style>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk.js"></script>
+		<script src="https://sdk-cdn.mypurecloud.com/javascript/89.0.0/purecloud-platform-client-v2.min.js"></script>
+
+		<script>
+			//Global scope variables definitions here
+			var keepQConvList = [];
+			var mytoken = "";
+			
+			$( document ).ready(function() {
+				var pnfchannel;
+				$("#qbutton1").click(function() {
+					$("#queueslist").append('<option value="2">Queue 2</option>');
+				});
+
+				$("#qbutton2").click(function() {
+					$("#queueslist").append($('<option>', {
+						value: 3,
+						text: 'Queue 3'
+					}));
+				});
+
+				$("#qbutton3").click(function() {
+					var newOptions = {
+						'4' : 'Red',
+						'5' : 'Blue',
+						'6' : 'Green',
+						'7' : 'Yellow'
+					};
+					
+					$.each(newOptions, function(val, text) {
+						$("#queueslist").append($('<option>', {
+							value: val,
+							text: text
+						}));
+					});
+				});
+
+				function getParameterByName(name) {
+					name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+					var regex = new RegExp("[\\#&]" + name + "=([^&#]*)"),
+					results = regex.exec(location.hash);
+					return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+				}
+
+				$("#ddsel").click(function() {
+					document.querySelector("#myvalue").innerHTML = "Selected: " + $("#queueslist").val();
+				});
+				
+				$("#queueslist").change(function() {
+					document.querySelector("#myvalue").innerHTML = "Selected: " + $("#queueslist").val();
+				});
+
+				$("#btnsub").click(function() {
+					//create websocket and start listening to events
+					notificationsApi.postNotificationsChannels()
+					.then((channel) => {
+					pnfchannel = channel;
+					//Channel created => Set WebSocket in Channel
+					var socket = new WebSocket(channel.connectUri);
+					socket.onmessage = onSocketMessage;
+					//Subscribe to conversation events in the queue
+					let topic = [{"id": "v2.routing.queues."+$("#queueslist").val()+".conversations"}];
+					return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
+					})
+					//.then(() => {
+						//return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic)
+					//})
+					.then(() => {
+						console.log('LFC4: postNotificationsChannelSubscriptions returned successfully.');
+					})
+					.catch((err) => {
+						console.log('LFC4: There was a failure calling postNotificationsChannelSubscriptions');
+						console.error('LFC4: err= '+err);
+					});
+				});
+
+				$("#btndel").click(function() {
+					//delete subscription
+					notificationsApi.deleteNotificationsChannelSubscriptions(pnfchannel.id)
+					.then(() => {
+						console.log('LFC4: deleteNotificationsChannelSubscriptions returned successfully.');
+					})
+					.catch((err) => {
+						console.log('LFC4: There was a failure calling deleteNotificationsChannelSubscriptions');
+						console.error('LFC4: err= '+err);
+					});
+				});
+				//schedulebutton1
+				$("#schedulebutton1").click(function() {
+					//Import Schedule JSON
+
+					//Create Schedule JSON first
+					const ScheduleJson = {
+						"description": "MyNew Imported Test Schedule",
+						"weekCount": 1,
+						"agentSchedules": [
+							{
+								"userId": "",
+								"shifts": [
+									{
+										"activities":  [
+											{
+												"activityCodeId": "0",
+												"startDate": "2021-08-02T08:00:00+0300",
+												"lengthMinutes": 120,
+												"description": "",
+												"paid": true
+											}
+										],
+										"manuallyEdited": true
+									},
+									{
+										"activities":  [
+											{
+												"activityCodeId": "0",
+												"startDate": "2021-08-03T08:00:00+0300",
+												"lengthMinutes": 120,
+												"description": "",
+												"paid": true
+											}
+										],
+										"manuallyEdited": true
+									}
+								],
+								"fullDayTimeOffMarkers":[
+									{
+										"businessUnitDate":"2021-08-06",
+										"lengthMinutes":480,
+										"description":"Full day time off",
+										"activityCodeId":"5",
+										"paid":true
+									}
+								]
+							}
+						]
+					}
+
+					//And now import that to workforcemanagement schedules
+					alert("got some token? : "+mytoken)
+
+					var jsonSched = JSON.stringify(ScheduleJson);
+
+					var xhr = new XMLHttpRequest();
+					//xhr.open("POST", "/example/");
+					xhr.open("POST", "https://apps.mypurecloud.de//uploads/v4/services/workforcemanagement/businessunits/10c9e87e-4da2-4499-98a0-0272ce9852db/weeks/2021-08-02/schedules");
+					//xhr.setRequestHeader("Content-Type", "application/json");
+					xhr.setRequestHeader("Content-Type", "multipart/form-data");
+					xhr.setRequestHeader("bearer", mytoken);
+					xhr.send(jsonSched);
+
+				});
+
+
+				//https://developer.mypurecloud.de/api/rest/client-libraries/javascript/RoutingApi.html#getRoutingQueues
+				
+                //Purecloud Oauth information
+                var platformClient = require('platformClient');
+                var client = platformClient.ApiClient.instance;
+                var clientId = 'f481400e-e257-4529-8b1d-c52ac27575e0';
+                var redirectUri = 'http://127.0.0.1:5500/implicitgrantbase.html'; //Now using http localhost:5500 ... would be https clientApp address - same as the clientApp configuration url without parameters
+        
+                client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
+                
+                //API instances
+                var usersApi = new platformClient.UsersApi();
+                var notificationsApi = new platformClient.NotificationsApi();
+                var routingApi = new platformClient.RoutingApi();
+        
+                //Perform Implicit Login Grant Authentication
+                client.loginImplicitGrant(clientId, redirectUri)
+                    .then((data) => {
+                        //User Authenticated
+                        console.log("LFC4: Authenticated: " + JSON.stringify(data));
+						
+						//Get token
+						mytoken = data.accessToken;
+
+                        //Make request to GET /api/v2/users/me?expand=presence
+                        return usersApi.getUsersMe({ 'expand': ["presence"] });
+                    })
+                    .then((userMe) => {
+                        //Me Response
+                        document.querySelector("#Welcome").innerHTML = "Welcome " + userMe.name;
+                        console.log("LFC4: Hello, "+userMe.name+"!");
+
+						let opts = { 
+						  'pageSize': 100, // Number | Page size
+						  'pageNumber': 1, // Number | Page number
+						  'sortBy': "name" //, String | Sort by
+						  //'name': "name_example", // String | Name
+						  //'id': ["id_example"], // [String] | ID(s)
+						  //'divisionId': ["divisionId_example"] // [String] | Division ID(s)
+						};
+
+                        return routingApi.getRoutingQueues(opts);
+                    }).then((myqueues) => {
+						$.each(myqueues.entities, function(i, entity) {
+							//$("#qlist").append('<li>name: '+entity.name+' id: '+entity.id)
+							$("#queueslist").append($('<option>', {
+								value: entity.id,
+								text: entity.name
+							}));
+
+						});
+						//console.log(`LFC4: getRoutingQueues success! data: ${JSON.stringify(myqueues, null, 2)}`);
+						console.log("LFC4: Got some queues... added to dropdown also.");
+						//return notificationsApi.postNotificationsChannels();
+					//}).then((channel) => {
+                        //Channel Created
+                        //Set WebSocket in Channel
+                        //var socket = new WebSocket(channel.connectUri);
+                        //socket.onmessage = onSocketMessage;
+                        //Subscribe to conversation events in the queue
+                        //let topic = [{"id": "v2.routing.queues.52672129-f97b-40c1-b011-f50e6a577259.conversations.calls"}];
+                        //return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+                    }).catch((err) => {
+                        //Handle failure response
+                        console.log("LFC4: "+err);
+                    });
+					
+					
+                    //Handler for every Websocket message
+                    function onSocketMessage(event){
+                        console.log("LFC4: Websocket Event Received...");
+                        let data = JSON.parse(event.data);
+                        let topic = data.topicName;
+                        console.log("LFC4: Notification: Topic = " + topic);
+			
+			let checktopic = "v2.routing.queues."+$("#queueslist").val()+".conversations";
+			if(topic == checktopic) {
+				let eventBody = data.eventBody;
+				console.log("LFC4: Notification: Body.participants... ");
+							$.each(eventBody.participants, function(i, particip) {
+								$("#qlist").append('<li>participant name: '+particip.name+' id: '+particip.id+' purpose: '+particip.purpose);
+								console.log('LFC4: -----');
+								console.log('LFC4: name: ' +particip.name+' purpose: ' +particip.purpose+' id: ' +particip.id);
+								//console.log('LFC4: address: ' +particip.address);
+								if(jQuery.inArray('connectedTime', particip) > -1) { 
+								   //
+								   console.log('LFC4: connectedTime: '+particip.connectedTime);
+								   };
+								if(jQuery.inArray('endTime', particip) > -1) { 
+								   //
+								   console.log('LFC4: connectedTime: '+particip.connectedTime);
+								   };
+								if(jQuery.inArray('state', particip) > -1) { 
+								   //
+								   console.log('LFC4: state: '+particip.state);
+								   };
+								console.log('LFC4: -----');
+							});
+							console.log('LFC4: ======');
+							$("#qlist").append('<li>======');
+			};
+		    };
+					
+		});
+
+		</script>
+
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+		<div class="grid-container">
+			<div id="left">
+				<h1 id="Welcome" width="100%" align="center">Welcome</h1>
+				<br />
+				<button type="button" id="qbutton1">Add Queue 2</button>
+				<button type="button" id="qbutton2">Add Queue 3</button>
+				<button type="button" id="qbutton3">Add Multiple</button>
+				<button type="button" id="ddsel">Get selected value</button>
+				<br />
+				<h2 id="myvalue">Selected: </h2>
+				<br />
+				<button type="button" id="btnsub">Subscribe to Queue's events</button>
+				<button type="button" id="btndel">Delete subscription</button>
+				<br />
+				<select id="queueslist">
+					<option value="1">Example Queue</option>
+				</select>
+				<br />
+				<h2>Queues list: </h2>
+				<ul id="qlist">
+				</ul>
+				<br />
+			</div>
+			<div id="right">
+				<h1 align="center">Right side</h1>
+				<button type="button" id="schedulebutton1">Try to import schedule JSON</button>
+			</div>
+		</div>
+	</body>
+</html>
