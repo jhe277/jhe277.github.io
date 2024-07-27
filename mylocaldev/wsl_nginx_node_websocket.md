@@ -19,7 +19,7 @@ Open **Powershell** in Windows ***as Administrator*** and run command:<br />
 wsl --install
 ```
 and ***reboot*** after installation is ready and you are informed about restarting...<br />
-Detailed instructions: https://learn.microsoft.com/en-us/windows/wsl/install<br />
+Detailed instructions: [https://learn.microsoft.com/en-us/windows/wsl/install](https://learn.microsoft.com/en-us/windows/wsl/install)<br />
 
 
 ## 3. Open Wsl window
