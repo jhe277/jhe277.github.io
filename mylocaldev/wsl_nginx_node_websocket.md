@@ -4,7 +4,7 @@
 ## Installing local development environment in Windows 
 ### with Wsl Ubuntu for nginx + node + websocket and later testing with https/wss
 
-## 1. Modify Windows Hosts file:
+## 1. Modify Windows Hosts file: (probably not needed with newer wsl ubuntu releases? Can skip this unless want to use name in windows side)
 in **Windows** open e.g. **Notepad** ***as Administrator*** and open file:<br />
 ***c:\windows\system32\drivers\etc\hosts***
 <br /><br />
@@ -23,13 +23,21 @@ Detailed instructions: [https://learn.microsoft.com/en-us/windows/wsl/install](h
 
 
 ## 3. Open Wsl window
-setup your default user etc stuff and then in Wsl console next steps. <br />
+
+### 3.1. setup your default user etc stuff and then in Wsl console next steps. <br />
 If you have **Windows Terminal** you should have option to launch Ubuntu from there.
 ```bash
 Default user: <your selected username Wsl>
 ...
 ...
 ```
+### 3.2. Modify /etc/hosts file and add next line:
+```bash
+...
+127.0.0.1       my.local.dev.example.net
+...
+```
+
 
 ## 4. Install nginx
 
@@ -54,7 +62,7 @@ curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
 
 ### 5.2 Install latest nodejs and npm
 ```bash
-sudo apt-get install nodejs npm
+sudo apt-get install nodejs
 ```
 
 ### 5.3. Create directory for your Node server.js file and change into that directory
