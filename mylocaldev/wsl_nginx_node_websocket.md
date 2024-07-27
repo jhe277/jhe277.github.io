@@ -190,7 +190,7 @@ sudo systemctl restart nginx.service
 
 ### 10.6. Check nginx status also just in case
 ```bash
-sudo systemctl statud nginx.service
+sudo systemctl status nginx.service
 ```
 
 ## 11. Test WebSocket through the nginx WebSocket proxy
