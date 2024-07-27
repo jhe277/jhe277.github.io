@@ -22,7 +22,7 @@ and ***reboot*** after installation is ready and you are informed about restarti
 Detailed instructions: [https://learn.microsoft.com/en-us/windows/wsl/install](https://learn.microsoft.com/en-us/windows/wsl/install)<br />
 
 
-## 3. Open Wsl window
+## 3. Open (Wsl) Ubuntu window
 
 ### 3.1. setup your default user etc stuff and then in Wsl console next steps. <br />
 If you have **Windows Terminal** you should have option to launch Ubuntu from there.
