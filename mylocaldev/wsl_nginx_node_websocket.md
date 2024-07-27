@@ -128,7 +128,7 @@ You should see the text you wrote in a node server.js window and text should als
 
 ## 10. let's create some proxy configuration for websocket in nginx
 
-modify file ***/etc/nginx/nginx.conf*** (add upstream and map definitions)<br />
+### 10.1. modify file ***/etc/nginx/nginx.conf*** (add upstream and map definitions)<br />
 You will need your ip address here, use **hostname -I** command
 ```nginx
 
@@ -148,7 +148,7 @@ You will need your ip address here, use **hostname -I** command
 ...
 
 ```
-Create new server file **example.net** into **/etc/nginx/sites-available/** directory <br />
+### 10.2. Create new server file **example.net** into **/etc/nginx/sites-available/** directory <br />
 ```bash
 sudo nano /etc/nginx/sites-available/example.net
 ```
@@ -157,7 +157,6 @@ delete default or at least change name or delete symlink?)<br />
 Add this into that file:
 ```nginx
 
-    ...
     server {
             listen 8888;
             server_name example.net;
@@ -170,14 +169,28 @@ Add this into that file:
                     proxy_set_header Host $host;
             }
     }
-    ...
 
 ```
 
-/etc/nginx/sites-enabled/ (create symlink to server configurations you want to enable)<br />
+### 10.3. /etc/nginx/sites-enabled/ (create symlink to server configurations you want to enable)<br />
 You will need to create symlink into **/etc/nginx/sites-enabled** -directory if you want to activate that server
 ```bash
 sudo ln -s /etc/nginx/sites-available/example.net /etc/nginx/sites-enabled/
+```
+
+### 10.4. Test nginx configuration that it is ok and not failing
+```bash
+sudo nginx -t
+```
+
+### 10.5. If test succeeded (syntax is ok and test is succesfull) then restart nginx
+```bash
+sudo systemctl restart nginx.service
+```
+
+### 10.6. Check nginx status also just in case
+```bash
+sudo systemctl statud nginx.service
 ```
 
 ## 11. Test WebSocket through the nginx WebSocket proxy
