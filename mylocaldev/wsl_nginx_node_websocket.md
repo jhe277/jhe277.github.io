@@ -32,8 +32,15 @@ Default user: <your selected username Wsl>
 ```
 
 ## 4. Install nginx
+
+### 4.1. apt-get update & upgrade
 ```bash
-sudo apt install nginx
+sudo apt-get update && sudo apt-get upgrade
+```
+
+### 4.2. Install nginx
+```bash
+sudo apt-get install nginx
 ```
 
 ### configure some stuff in nginx or leave it as default for now - we will later make some config changes...
@@ -63,7 +70,7 @@ sudo npm install ws
 
 ## 6. Install wscat
 ```bash
-sudo apt-get install -g wscat
+sudo npm install -g wscat
 ```
 
 # Installing stuff is done now!
